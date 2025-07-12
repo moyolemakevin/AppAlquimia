@@ -1,0 +1,7 @@
+{
+  "name": "appdeberagenda1",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
