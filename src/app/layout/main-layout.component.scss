@@ -1,0 +1,23 @@
+.user-summary {
+  padding: 1.5rem 1rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--ion-color-medium);
+  }
+  small {
+    display: block;
+    margin-top: 0.4rem;
+    color: var(--ion-color-medium, #666);
+  }
+}
+
+ion-item[disabled] {
+  opacity: 0.5;
+}

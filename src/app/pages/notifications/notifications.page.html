@@ -1,0 +1,30 @@
+<ion-page>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Notificaciones</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
+    <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <ion-list>
+      <ion-item *ngFor="let notification of notifications()" [class.read]="notification.leida">
+        <ion-icon slot="start" name="notifications-outline"></ion-icon>
+        <ion-label>
+          <h2>{{ notification.titulo }}</h2>
+          <p>{{ notification.contenido }}</p>
+          <small>{{ notification.fecha | date: 'short' }}</small>
+        </ion-label>
+        <ion-button fill="clear" size="small" (click)="markAsRead(notification)" *ngIf="!notification.leida">
+          <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+          Marcar como leida
+        </ion-button>
+      </ion-item>
+    </ion-list>
+
+    <ion-text color="medium" *ngIf="!notifications().length && !isLoading()">
+      No tienes notificaciones nuevas.
+    </ion-text>
+  </ion-content>

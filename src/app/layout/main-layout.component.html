@@ -1,0 +1,30 @@
+<ion-app>
+  <ion-split-pane contentId="main-content">
+    <ion-menu contentId="main-content">
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Alquimia Esencial</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="user-summary" *ngIf="user() as currentUser">
+          <h2>{{ greeting() }}</h2>
+          <p>{{ currentUser.role === 'admin' ? 'Administrador' : 'Usuario' }}</p>
+          <small>{{ currentUser.email }}</small>
+        </div>
+        <ion-list>
+          <ng-container *ngFor="let item of menuItems">
+            <ion-menu-toggle auto-hide="false" *ngIf="canDisplay(item)">
+              <ion-item button lines="none" detail="false" (click)="handleMenuItem(item)">
+                <ion-icon [name]="item.icon" slot="start"></ion-icon>
+                <ion-label>{{ item.label }}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          </ng-container>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>

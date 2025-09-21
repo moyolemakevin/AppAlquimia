@@ -1,0 +1,11 @@
+.edit-form {
+  padding: 1.5rem 1rem;
+
+  ion-list {
+    margin-bottom: 1rem;
+  }
+
+  ion-button + ion-button {
+    margin-top: 0.5rem;
+  }
+}

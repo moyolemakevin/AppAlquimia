@@ -1,0 +1,36 @@
+ion-content {
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+  --padding-top: 1rem;
+}
+
+.stats ion-card {
+  text-align: center;
+}
+
+.admin-form {
+  margin-bottom: 1rem;
+
+  ion-item {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.accordion-content {
+  padding: 1rem 0;
+}
+
+ion-segment {
+  max-width: 160px;
+  margin-right: 0.5rem;
+}
+
+ion-select {
+  max-width: 140px;
+  margin-right: 0.5rem;
+}

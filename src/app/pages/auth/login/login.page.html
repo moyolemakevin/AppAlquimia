@@ -1,0 +1,58 @@
+<ion-page>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Inicia sesion</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
+    <div class="login-container">
+      <h1>Bienvenido a Alquimia Esencial</h1>
+      <p>Ingresa tus credenciales para continuar.</p>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <ion-list lines="none">
+          <ion-item>
+            <ion-label position="floating">Nombre de usuario</ion-label>
+            <ion-input
+              formControlName="username"
+              type="text"
+              autocomplete="username"
+              required
+            ></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="usernameControl?.touched && usernameControl?.invalid">
+            El nombre de usuario es requerido
+          </ion-text>
+
+          <ion-item>
+            <ion-label position="floating">Clave</ion-label>
+            <ion-input
+              formControlName="password"
+              type="password"
+              autocomplete="current-password"
+              required
+            ></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="passwordControl?.touched && passwordControl?.invalid">
+            La clave es obligatoria
+          </ion-text>
+        </ion-list>
+
+        <ion-text color="danger" *ngIf="apiError" class="api-error">
+          {{ apiError }}
+        </ion-text>
+
+        <ion-button expand="block" type="submit" [disabled]="isSubmitting">
+          <ng-container *ngIf="isSubmitting; else loginLabel">
+            <ion-spinner name="crescent"></ion-spinner>
+          </ng-container>
+          <ng-template #loginLabel>Iniciar sesion</ng-template>
+        </ion-button>
+      </form>
+
+      <div class="auth-links">
+        <a routerLink="/forgot-password">Olvidaste tu clave?</a>
+        <a routerLink="/register">Crear cuenta nueva</a>
+      </div>
+    </div>
+  </ion-content>

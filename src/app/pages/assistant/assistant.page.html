@@ -1,0 +1,41 @@
+<ion-page>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Asistente IA</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list class="chat-thread">
+      <ion-item *ngFor="let message of messages()" [class.user]="message.sender === 'user'" lines="none">
+        <ion-text>
+          <p class="bubble">
+            {{ message.text }}
+          </p>
+          <small>{{ message.timestamp | date: 'shortTime' }}</small>
+        </ion-text>
+      </ion-item>
+    </ion-list>
+
+    <section class="suggestions" *ngIf="suggestions().length">
+      <h3>Sugerencias rapidas</h3>
+      <ion-chip *ngFor="let suggestion of suggestions()" (click)="useSuggestion(suggestion)">
+        <ion-label>{{ suggestion }}</ion-label>
+      </ion-chip>
+    </section>
+  </ion-content>
+
+  <ion-footer>
+    <ion-toolbar>
+      <ion-item lines="none">
+        <ion-input
+          [(ngModel)]="currentMessage"
+          type="text"
+          placeholder="Escribe tu mensaje sobre aceites esenciales"
+          [disabled]="isSending"
+        ></ion-input>
+        <ion-button slot="end" fill="solid" (click)="handleSend()" [disabled]="isSending || !currentMessage.trim()">
+          <ion-icon slot="icon-only" name="paper-plane-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-toolbar>
+  </ion-footer>

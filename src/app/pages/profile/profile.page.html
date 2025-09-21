@@ -1,0 +1,40 @@
+<ion-page>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Mi perfil</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
+    <ion-card *ngIf="profile() as user">
+      <ion-card-header>
+        <ion-card-title>{{ user.name || user.username }}</ion-card-title>
+        <ion-card-subtitle>{{ user.email }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <p><strong>Telefono:</strong> {{ user.phone || 'No registrado' }}</p>
+        <p><strong>Rol:</strong> {{ user.role }}</p>
+        <p><strong>Nivel:</strong> {{ user.level || 'Novato' }}</p>
+        <p><strong>Registrado:</strong> {{ user.registeredAt | date: 'mediumDate' }}</p>
+
+        <ion-button expand="block" (click)="editProfile()">
+          Editar perfil
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngIf="stats() as data">
+      <ion-card-header>
+        <ion-card-title>Actividad reciente</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p><strong>Aceites explorados:</strong> {{ data.total_aceites_explorados || 0 }}</p>
+        <p><strong>Favoritos:</strong> {{ data.favoritos_total || 0 }}</p>
+        <p><strong>Tips recibidos:</strong> {{ data.tips_recibidos || 0 }}</p>
+        <p><strong>Ultimo acceso:</strong> {{ data.ultimo_login ? (data.ultimo_login | date: 'short') : 'Sin registro' }}</p>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-text color="medium" *ngIf="!profile() && !isLoading()">
+      No pudimos cargar tu informacion de perfil.
+    </ion-text>
+  </ion-content>

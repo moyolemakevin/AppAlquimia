@@ -1,0 +1,35 @@
+<ion-page>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Mis favoritos</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
+    <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <section class="favorites-list">
+      <ion-spinner name="crescent" *ngIf="isLoading()"></ion-spinner>
+
+      <ng-container *ngIf="!isLoading()">
+        <ion-card *ngFor="let aceite of favoritos()">
+          <ion-card-header>
+            <ion-card-title>{{ aceite.nombre }}</ion-card-title>
+            <ion-card-subtitle>{{ aceite.beneficios }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <p>{{ aceite.descripcion }}</p>
+            <ion-button fill="clear" size="small" color="danger" (click)="remove(aceite)">
+              <ion-icon slot="start" name="heart"></ion-icon>
+              Eliminar
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-text color="medium" *ngIf="!favoritos().length">
+          Todavia no tienes favoritos. Explora aceites y agrega tus preferidos.
+        </ion-text>
+      </ng-container>
+    </section>
+  </ion-content>

@@ -1,0 +1,179 @@
+<ion-page>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Panel de administracion</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
+    <section class="stats" *ngIf="dashboard() as data">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6" sizeMd="3">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>{{ data.counts.aceites }}</ion-card-title>
+                <ion-card-subtitle>Aceites</ion-card-subtitle>
+              </ion-card-header>
+            </ion-card>
+          </ion-col>
+          <ion-col size="6" sizeMd="3">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>{{ data.counts.usuarios }}</ion-card-title>
+                <ion-card-subtitle>Usuarios</ion-card-subtitle>
+              </ion-card-header>
+            </ion-card>
+          </ion-col>
+          <ion-col size="6" sizeMd="3">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>{{ data.counts.tips }}</ion-card-title>
+                <ion-card-subtitle>Tips</ion-card-subtitle>
+              </ion-card-header>
+            </ion-card>
+          </ion-col>
+          <ion-col size="6" sizeMd="3">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>{{ data.counts.favoritos }}</ion-card-title>
+                <ion-card-subtitle>Favoritos</ion-card-subtitle>
+              </ion-card-header>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </section>
+
+    <ion-accordion-group>
+      <ion-accordion value="aceites">
+        <ion-item slot="header" color="light">
+          <ion-icon slot="start" name="construct-outline"></ion-icon>
+          <ion-label>Gestionar aceites</ion-label>
+        </ion-item>
+        <div class="accordion-content" slot="content">
+          <form [formGroup]="aceiteForm" (ngSubmit)="submitAceite()" class="admin-form">
+            <ion-list lines="none">
+              <ion-item>
+                <ion-label position="stacked">Nombre</ion-label>
+                <ion-input formControlName="nombre"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Descripcion</ion-label>
+                <ion-input formControlName="descripcion"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Beneficios</ion-label>
+                <ion-input formControlName="beneficios"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Usos</ion-label>
+                <ion-input formControlName="usos"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Precauciones</ion-label>
+                <ion-input formControlName="precauciones"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Emociones relacionadas</ion-label>
+                <ion-input formControlName="emociones_relacionadas"></ion-input>
+              </ion-item>
+            </ion-list>
+            <div class="form-actions">
+              <ion-button type="submit">{{ aceiteForm.value.id ? 'Actualizar' : 'Crear' }}</ion-button>
+              <ion-button fill="clear" type="button" (click)="resetAceiteForm()">Limpiar</ion-button>
+            </div>
+          </form>
+
+          <ion-list>
+            <ion-item *ngFor="let aceite of aceites()">
+              <ion-label>
+                <h3>{{ aceite.nombre }}</h3>
+                <p>{{ aceite.beneficios }}</p>
+              </ion-label>
+              <ion-button fill="clear" size="small" (click)="editAceite(aceite)">Editar</ion-button>
+              <ion-button fill="clear" size="small" color="danger" (click)="deleteAceite(aceite.id)">Eliminar</ion-button>
+            </ion-item>
+          </ion-list>
+        </div>
+      </ion-accordion>
+
+      <ion-accordion value="tips">
+        <ion-item slot="header" color="light">
+          <ion-icon slot="start" name="analytics-outline"></ion-icon>
+          <ion-label>Gestionar tips</ion-label>
+        </ion-item>
+        <div class="accordion-content" slot="content">
+          <form [formGroup]="tipForm" (ngSubmit)="submitTip()" class="admin-form">
+            <ion-list lines="none">
+              <ion-item>
+                <ion-label position="stacked">Titulo</ion-label>
+                <ion-input formControlName="titulo"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Tipo</ion-label>
+                <ion-input formControlName="tipo"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Contenido</ion-label>
+                <ion-input formControlName="contenido"></ion-input>
+              </ion-item>
+            </ion-list>
+            <div class="form-actions">
+              <ion-button type="submit">{{ tipForm.value.id ? 'Actualizar' : 'Crear' }}</ion-button>
+              <ion-button fill="clear" type="button" (click)="resetTipForm()">Limpiar</ion-button>
+            </div>
+          </form>
+
+          <ion-list>
+            <ion-item *ngFor="let tip of tips()">
+              <ion-label>
+                <h3>{{ tip.titulo }}</h3>
+                <p>{{ tip.tipo }}</p>
+              </ion-label>
+              <ion-button fill="clear" size="small" (click)="editTip(tip)">Editar</ion-button>
+              <ion-button fill="clear" size="small" color="danger" (click)="deleteTip(tip.id)">Eliminar</ion-button>
+            </ion-item>
+          </ion-list>
+        </div>
+      </ion-accordion>
+
+      <ion-accordion value="usuarios">
+        <ion-item slot="header" color="light">
+          <ion-icon slot="start" name="people-outline"></ion-icon>
+          <ion-label>Gestionar usuarios</ion-label>
+        </ion-item>
+        <div class="accordion-content" slot="content">
+          <ion-list>
+            <ion-item *ngFor="let user of users()">
+              <ion-label>
+                <h3>{{ user.name || user.username }}</h3>
+                <p>{{ user.email }}</p>
+              </ion-label>
+              <ion-segment [value]="user.role" (ionChange)="updateUser(user, { role: $event.detail.value })">
+                <ion-segment-button value="usuario">Usuario</ion-segment-button>
+                <ion-segment-button value="admin">Admin</ion-segment-button>
+              </ion-segment>
+              <ion-select
+                interface="popover"
+                placeholder="Nivel"
+                [value]="user.level"
+                (ionChange)="updateUser(user, { level: $event.detail.value })"
+              >
+                <ion-select-option value="Novato">Novato</ion-select-option>
+                <ion-select-option value="Experto">Experto</ion-select-option>
+                <ion-select-option value="Maestro">Maestro</ion-select-option>
+              </ion-select>
+              <ion-button
+                fill="clear"
+                size="small"
+                [color]="user.active ? 'success' : 'medium'"
+                (click)="updateUser(user, { active: !user.active })"
+              >
+                {{ user.active ? 'Activo' : 'Inactivo' }}
+              </ion-button>
+            </ion-item>
+          </ion-list>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+  </ion-content>

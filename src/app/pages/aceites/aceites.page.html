@@ -1,0 +1,80 @@
+<ion-page>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Aceites esenciales</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
+    <ion-searchbar
+      placeholder="Buscar por nombre, beneficio o palabra clave"
+      (ionInput)="onSearchChange($event)"
+      debounce="200"
+    ></ion-searchbar>
+
+    <section class="filters">
+      <ion-chip
+        *ngFor="let category of categories"
+        [color]="selectedCategory() === category.value ? 'primary' : 'medium'"
+        (click)="applyCategory(category.value)"
+      >
+        <ion-label>{{ category.label }}</ion-label>
+      </ion-chip>
+      <ion-button fill="clear" size="small" (click)="toggleAdvancedFilters()">
+        <ion-icon slot="start" name="funnel-outline"></ion-icon>
+        Mas filtros
+      </ion-button>
+    </section>
+
+    <section class="advanced" *ngIf="advancedFiltersVisible()">
+      <ion-item lines="none">
+        <ion-label position="stacked">Uso</ion-label>
+        <ion-input
+          placeholder="Difusor, masaje, inhalacion..."
+          (ionInput)="updateAdvancedFilter('uso', $event.detail.value as string)"
+        ></ion-input>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label position="stacked">Emocion o sensacion</ion-label>
+        <ion-input
+          placeholder="Ansiedad, foco, energia..."
+          (ionInput)="updateAdvancedFilter('emocion', $event.detail.value as string)"
+        ></ion-input>
+      </ion-item>
+    </section>
+
+    <div class="list-container">
+      <ion-spinner name="crescent" *ngIf="isLoading()"></ion-spinner>
+
+      <ng-container *ngIf="!isLoading()">
+        <ion-card *ngFor="let aceite of filteredAceites()">
+          <ion-card-header>
+            <ion-card-title>{{ aceite.nombre }}</ion-card-title>
+            <ion-card-subtitle>{{ aceite.beneficios }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <p>{{ aceite.descripcion }}</p>
+
+            <div class="tags">
+              <ion-chip color="secondary" *ngIf="aceite.emociones_relacionadas">
+                <ion-label>{{ aceite.emociones_relacionadas }}</ion-label>
+              </ion-chip>
+              <ion-chip *ngIf="aceite.usos">
+                <ion-label>Usos: {{ aceite.usos }}</ion-label>
+              </ion-chip>
+            </div>
+
+            <div class="card-actions">
+              <ion-button fill="clear" size="small" (click)="toggleFavorite(aceite)">
+                <ion-icon slot="start" [name]="aceite.isFavorite ? 'heart' : 'heart-outline'"></ion-icon>
+                {{ aceite.isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos' }}
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-text color="medium" *ngIf="!filteredAceites().length">
+          No encontramos aceites que coincidan con tu busqueda.
+        </ion-text>
+      </ng-container>
+    </div>
+  </ion-content>

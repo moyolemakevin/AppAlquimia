@@ -1,0 +1,76 @@
+<ion-page>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Crear cuenta</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
+    <div class="register-container">
+      <h1>Unete a Alquimia Esencial</h1>
+      <p>Crea una cuenta para acceder a recomendaciones personalizadas.</p>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <ion-list lines="none">
+          <ion-item>
+            <ion-label position="floating">Nombre completo</ion-label>
+            <ion-input formControlName="name" type="text" required></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
+            Ingresa tu nombre completo
+          </ion-text>
+
+          <ion-item>
+            <ion-label position="floating">Nombre de usuario</ion-label>
+            <ion-input formControlName="username" type="text" required></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="form.get('username')?.touched && form.get('username')?.invalid">
+            El usuario debe tener al menos 4 caracteres
+          </ion-text>
+
+          <ion-item>
+            <ion-label position="floating">Correo electronico</ion-label>
+            <ion-input formControlName="email" type="email" required></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+            Ingresa un correo valido
+          </ion-text>
+
+          <ion-item>
+            <ion-label position="floating">Telefono</ion-label>
+            <ion-input formControlName="phone" type="tel"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Clave</ion-label>
+            <ion-input formControlName="password" type="password" required></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
+            La clave debe tener al menos 6 caracteres
+          </ion-text>
+
+          <ion-item>
+            <ion-label position="floating">Confirmar clave</ion-label>
+            <ion-input formControlName="confirmPassword" type="password" required></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="passwordMismatch">
+            Las claves no coinciden
+          </ion-text>
+        </ion-list>
+
+        <ion-text color="danger" *ngIf="apiError" class="api-error">
+          {{ apiError }}
+        </ion-text>
+
+        <ion-button expand="block" type="submit" [disabled]="isSubmitting">
+          <ng-container *ngIf="isSubmitting; else registerLabel">
+            <ion-spinner name="crescent"></ion-spinner>
+          </ng-container>
+          <ng-template #registerLabel>Crear cuenta</ng-template>
+        </ion-button>
+
+        <ion-button expand="block" fill="clear" routerLink="/login">
+          Ya tengo una cuenta
+        </ion-button>
+      </form>
+    </div>
+  </ion-content>

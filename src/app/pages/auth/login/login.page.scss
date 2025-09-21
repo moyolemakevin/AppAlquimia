@@ -1,0 +1,41 @@
+.login-container {
+  padding: 2rem 1.5rem;
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
+
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: var(--ion-color-medium);
+    margin-bottom: 2rem;
+  }
+
+  ion-list {
+    margin-bottom: 1rem;
+  }
+
+  ion-button {
+    margin-top: 1rem;
+  }
+}
+
+.auth-links {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  a {
+    color: var(--ion-color-primary);
+    text-decoration: none;
+  }
+}
+
+.api-error {
+  display: block;
+  margin: 0.5rem 0;
+}
