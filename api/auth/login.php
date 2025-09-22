@@ -11,8 +11,11 @@ if ($username === '' || $password === '') {
     respondError('Usuario y clave son obligatorios');
 }
 
-$query = $db->prepare('SELECT id, uid, nombre_usuario, clave, nombre_completo, email, telefono, rol, nivel, modo, activo, fecha_registro FROM usuarios WHERE nombre_usuario = :username OR email = :username LIMIT 1');
-$query->execute(['username' => $username]);
+$query = $db->prepare('SELECT id, uid, nombre_usuario, clave, nombre_completo, email, telefono, rol, nivel, modo, activo, fecha_registro FROM usuarios WHERE nombre_usuario = :username OR email = :email LIMIT 1');
+$query->execute([
+    'username' => $username,
+    'email' => $username,
+]);
 $user = $query->fetch();
 
 if (!$user) {
@@ -39,6 +42,7 @@ respondSuccess([
     'token' => $user['uid'],
     'user' => [
         'id' => (int)$user['id'],
+        'uid' => $user['uid'],
         'username' => $user['nombre_usuario'],
         'name' => $user['nombre_completo'],
         'email' => $user['email'],

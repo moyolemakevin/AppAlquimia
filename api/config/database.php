@@ -1,8 +1,6 @@
 <?php
 declare(strict_types=1);
 
-use PDO;
-
 class Database
 {
     private string $host;
@@ -19,15 +17,15 @@ class Database
         $this->password = getenv('DB_PASSWORD') ?: '';
     }
 
-    public function getConnection(): PDO
+    public function getConnection(): \PDO
     {
         $dsn = sprintf('mysql:host=%s;dbname=%s;charset=%s', $this->host, $this->db, $this->charset);
         $options = [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false,
+            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+            \PDO::ATTR_EMULATE_PREPARES => false,
         ];
 
-        return new PDO($dsn, $this->username, $this->password, $options);
+        return new \PDO($dsn, $this->username, $this->password, $options);
     }
 }

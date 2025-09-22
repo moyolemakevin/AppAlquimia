@@ -9,7 +9,6 @@ import {
   IonItem,
   IonLabel,
   IonList,
-  IonPage,
   IonText,
   IonTitle,
   IonToolbar,
@@ -28,7 +27,6 @@ import { User } from '../../../core/models';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    IonPage,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -133,3 +131,4 @@ export class ProfileEditPage implements OnInit {
     await toast.present();
   }
 }
+

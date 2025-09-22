@@ -1,41 +1,95 @@
-<ion-page>
-  <ion-header>
-    <ion-toolbar color="primary">
-      <ion-title>Asistente IA</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
-    <ion-list class="chat-thread">
-      <ion-item *ngFor="let message of messages()" [class.user]="message.sender === 'user'" lines="none">
-        <ion-text>
-          <p class="bubble">
-            {{ message.text }}
-          </p>
-          <small>{{ message.timestamp | date: 'shortTime' }}</small>
-        </ion-text>
-      </ion-item>
-    </ion-list>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Asistente IA</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-    <section class="suggestions" *ngIf="suggestions().length">
-      <h3>Sugerencias rapidas</h3>
-      <ion-chip *ngFor="let suggestion of suggestions()" (click)="useSuggestion(suggestion)">
-        <ion-label>{{ suggestion }}</ion-label>
-      </ion-chip>
+<ion-content fullscreen class="assistant-content">
+  <div class="assistant-wrapper">
+    <section class="assistant-hero">
+      <ion-avatar class="assistant-avatar">
+        <ion-icon name="sparkles-outline"></ion-icon>
+      </ion-avatar>
+      <div class="assistant-copy">
+        <h1>Tu guia aromatica inteligente</h1>
+        <p>Descubre mezclas, rituales y tips personalizados segun tu estado de animo o meta del dia.</p>
+        <div class="prompt-chips">
+          <ion-chip
+            color="light"
+            *ngFor="let prompt of quickPrompts"
+            (click)="useSuggestion(prompt.query)"
+          >
+            <ion-icon slot="start" [name]="prompt.icon"></ion-icon>
+            <div class="chip-text">
+              <span class="chip-label">{{ prompt.label }}</span>
+              <small>{{ prompt.description }}</small>
+            </div>
+          </ion-chip>
+        </div>
+      </div>
     </section>
-  </ion-content>
 
-  <ion-footer>
-    <ion-toolbar>
+    <section class="assistant-suggestions" *ngIf="suggestions().length">
+      <header>
+        <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+        <span>Quieres profundizar en...</span>
+      </header>
+      <div class="suggestion-chips">
+        <ion-chip color="secondary" *ngFor="let suggestion of suggestions()" (click)="useSuggestion(suggestion)">
+          <ion-icon slot="start" name="sparkles-outline"></ion-icon>
+          <ion-label>{{ suggestion }}</ion-label>
+        </ion-chip>
+      </div>
+    </section>
+
+    <section class="chat-shell">
+      <div class="chat-thread">
+        <div
+          class="message"
+          *ngFor="let message of messages()"
+          [class.user]="message.sender === 'user'"
+        >
+          <ion-avatar class="message-avatar" *ngIf="message.sender === 'assistant'">
+            <ion-icon name="happy-outline"></ion-icon>
+          </ion-avatar>
+          <ion-avatar class="message-avatar user" *ngIf="message.sender === 'user'">
+            <ion-icon name="leaf-outline"></ion-icon>
+          </ion-avatar>
+
+          <div class="message-body">
+            <div class="message-meta">
+              <span class="message-author">{{ message.sender === 'user' ? 'Tu' : (message.topic || 'Asistente') }}</span>
+              <time>{{ message.timestamp | date: 'shortTime' }}</time>
+            </div>
+            <p class="message-bubble">{{ message.text }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</ion-content>
+
+<ion-footer class="assistant-footer">
+  <ion-toolbar>
+    <div class="composer">
       <ion-item lines="none">
+        <ion-icon slot="start" name="sparkles-outline"></ion-icon>
         <ion-input
           [(ngModel)]="currentMessage"
           type="text"
-          placeholder="Escribe tu mensaje sobre aceites esenciales"
+          placeholder="Haz tu consulta sobre aceites esenciales"
           [disabled]="isSending"
         ></ion-input>
-        <ion-button slot="end" fill="solid" (click)="handleSend()" [disabled]="isSending || !currentMessage.trim()">
+        <ion-button
+          slot="end"
+          fill="solid"
+          color="primary"
+          (click)="handleSend()"
+          [disabled]="isSending || !currentMessage.trim()"
+        >
           <ion-icon slot="icon-only" name="paper-plane-outline"></ion-icon>
         </ion-button>
       </ion-item>
-    </ion-toolbar>
-  </ion-footer>
+    </div>
+  </ion-toolbar>
+</ion-footer>

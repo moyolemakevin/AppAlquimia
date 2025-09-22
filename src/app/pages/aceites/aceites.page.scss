@@ -1,41 +1,300 @@
-ion-content {
-  --padding-top: 1rem;
-  --padding-start: 1rem;
-  --padding-end: 1rem;
-}
+﻿:host {
+  ion-toolbar {
+    --background: transparent;
+    --color: #37255f;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
 
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
+  .aceites-content {
+    --background: linear-gradient(180deg, #f4f0ff 0%, #ffffff 40%);
+  }
 
-.advanced ion-item {
-  --inner-padding-start: 0;
-  --inner-padding-end: 0;
-  margin-bottom: 0.5rem;
-}
+  .aceites-wrapper {
+    padding: 1.5rem clamp(1rem, 4vw, 2rem) 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
 
-.list-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
+  .hero {
+    background: linear-gradient(135deg, rgba(95, 75, 139, 0.16) 0%, rgba(143, 107, 253, 0.12) 100%);
+    border-radius: 28px;
+    padding: clamp(1.8rem, 4vw, 2.6rem);
+    box-shadow: 0 25px 60px rgba(88, 63, 140, 0.12);
+    color: #3f2b68;
 
-.tags {
-  margin: 0.5rem 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #7153c7;
 
-.card-actions {
-  display: flex;
-  justify-content: flex-end;
-}
+      ion-icon {
+        font-size: 1rem;
+      }
+    }
 
-ion-spinner {
-  margin: 2rem auto;
+    h1 {
+      margin: 1rem 0 0.6rem;
+      font-size: clamp(1.65rem, 5vw, 2.2rem);
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+      max-width: 540px;
+      color: rgba(54, 41, 92, 0.76);
+      line-height: 1.6;
+    }
+
+    .hero-metrics {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+
+      .metric {
+        min-width: 140px;
+        background: rgba(255, 255, 255, 0.66);
+        border-radius: 18px;
+        padding: 0.85rem 1.1rem;
+        box-shadow: 0 12px 32px rgba(88, 63, 140, 0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        .metric-value {
+          font-size: 1.4rem;
+          font-weight: 700;
+          color: #5f4b8b;
+        }
+
+        .metric-label {
+          font-size: 0.8rem;
+          text-transform: uppercase;
+          letter-spacing: 0.14em;
+          color: rgba(63, 42, 101, 0.65);
+        }
+      }
+    }
+  }
+
+  .filters-card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    box-shadow: 0 20px 45px rgba(74, 52, 120, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    ion-searchbar {
+      --box-shadow: none;
+      --background: rgba(143, 107, 253, 0.08);
+      --border-radius: 16px;
+      --color: #352358;
+    }
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+
+    ion-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: rgba(95, 75, 139, 0.12);
+      color: #5f4b8b;
+      font-weight: 500;
+
+      ion-icon {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .advanced ion-item {
+    --inner-padding-start: 0;
+    --inner-padding-end: 0;
+    --background: rgba(95, 75, 139, 0.05);
+    border-radius: 16px;
+    margin-bottom: 0.6rem;
+    padding: 0.6rem 0.8rem;
+
+    ion-label {
+      color: #5f4b8b;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.4rem;
+    position: relative;
+
+    ion-spinner {
+      grid-column: 1 / -1;
+      margin: 2.5rem auto;
+    }
+  }
+
+  .aceite-card {
+    --background: #ffffff;
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow: 0 22px 50px rgba(78, 52, 130, 0.16);
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+
+    ion-card-header {
+      padding: 1.4rem 1.6rem 0.8rem;
+
+      ion-card-subtitle {
+        color: rgba(94, 72, 140, 0.75);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      ion-card-title {
+        font-size: 1.35rem;
+        color: #3e2964;
+        font-weight: 700;
+      }
+    }
+
+    ion-card-content {
+      padding: 0 1.6rem 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.95rem;
+
+      p {
+        margin: 0;
+        color: rgba(32, 24, 51, 0.78);
+        line-height: 1.6;
+      }
+    }
+  }
+
+  .card-media {
+    position: relative;
+    height: 190px;
+
+    ion-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .media-badge {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: rgba(255, 255, 255, 0.88);
+      border-radius: 999px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #544083;
+
+      ion-icon {
+        color: #7a5bca;
+      }
+    }
+  }
+
+  .benefits-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+
+    ion-chip {
+      background: rgba(143, 107, 253, 0.12);
+      color: #573f99;
+      font-weight: 500;
+    }
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+
+    .card-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: rgba(46, 31, 78, 0.78);
+      font-weight: 500;
+
+      ion-icon {
+        color: #7a5bca;
+      }
+    }
+
+    ion-button {
+      --border-radius: 999px;
+      --border-color: rgba(95, 75, 139, 0.35);
+      --color: #5f4b8b;
+    }
+  }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2.5rem;
+    background: rgba(95, 75, 139, 0.06);
+    border-radius: 28px;
+    color: #4a346f;
+
+    img {
+      width: 180px;
+      margin-bottom: 1.2rem;
+    }
+
+    h3 {
+      margin: 0 0 0.4rem;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+      color: rgba(63, 43, 100, 0.7);
+      line-height: 1.5;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .hero {
+      padding: 1.5rem;
+    }
+
+    .hero-metrics {
+      gap: 1rem;
+    }
+
+    .filters-card {
+      padding: 1.2rem;
+    }
+  }
 }

@@ -8,16 +8,15 @@ import {
 import {
   IonButton,
   IonContent,
+  IonHeader,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
+  IonSpinner,
   IonText,
   IonTitle,
   IonToolbar,
-  IonHeader,
-  IonPage,
-  IonSpinner,
 } from '@ionic/angular/standalone';
 import { Router, RouterModule } from '@angular/router';
 import { ToastController } from '@ionic/angular';
@@ -32,7 +31,6 @@ import { AuthService } from '../../../core/services/auth.service';
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
-    IonPage,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -96,10 +94,10 @@ export class ForgotPasswordPage {
       .forgotPassword({ username })
       .pipe(take(1))
       .subscribe({
-        next: async (response: any) => {
+        next: async (data) => {
           this.isSubmitting = false;
           this.form.enable();
-          this.securityQuestion = response?.data?.question ?? 'Responde la pregunta de seguridad';
+          this.securityQuestion = data?.question ?? 'Responde la pregunta de seguridad';
           this.form.get('answer')?.setValidators([Validators.required]);
           this.form.get('newPassword')?.setValidators([Validators.required, Validators.minLength(6)]);
           this.form.get('answer')?.updateValueAndValidity();
@@ -110,7 +108,7 @@ export class ForgotPasswordPage {
           this.isSubmitting = false;
           this.form.enable();
           this.apiError = error?.error?.message ?? 'No pudimos obtener la pregunta de seguridad';
-          await this.presentToast(this.apiError, 'danger');
+          await this.presentToast(this.apiError ?? 'No pudimos procesar la solicitud', 'danger');
         },
       });
   }
@@ -129,17 +127,18 @@ export class ForgotPasswordPage {
       })
       .pipe(take(1))
       .subscribe({
-        next: async () => {
+        next: async (data) => {
           this.isSubmitting = false;
           this.form.enable();
-          await this.presentToast('Clave actualizada. Inicia sesion con tu nueva clave', 'success');
+          const message = data?.message ?? 'Clave actualizada. Inicia sesion con tu nueva clave';
+          await this.presentToast(message, 'success');
           this.router.navigateByUrl('/login');
         },
         error: async (error) => {
           this.isSubmitting = false;
           this.form.enable();
           this.apiError = error?.error?.message ?? 'No fue posible actualizar la clave';
-          await this.presentToast(this.apiError, 'danger');
+          await this.presentToast(this.apiError ?? 'No pudimos procesar la solicitud', 'danger');
         },
       });
   }

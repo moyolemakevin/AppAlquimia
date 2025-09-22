@@ -11,6 +11,7 @@ import {
   IonContent,
   IonGrid,
   IonIcon,
+  IonLabel,
   IonRow,
   IonCol,
   IonText,
@@ -69,6 +70,7 @@ addIcons({
     IonText,
     IonIcon,
     IonChip,
+    IonLabel,
   ],
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
@@ -81,7 +83,7 @@ export class HomePage implements OnInit {
   readonly user = computed(() => this.authService.currentUser);
   readonly greeting = computed(() => {
     const base = getTimeGreeting();
-    const name = this.user()?.name && this.user()?.name?.trim() !== '' ? this.user()!.name : this.user()?.username ?? 'Usuario';
+    const name = this.user()?.name && this.user()!.name.trim() !== '' ? this.user()!.name : this.user()?.username ?? 'Usuario';
     return `${base}, ${name}`;
   });
 
@@ -89,21 +91,9 @@ export class HomePage implements OnInit {
   isLoadingAceites = signal<boolean>(false);
 
   readonly quickPrompts = [
-    {
-      label: 'Que aceite me recomiendas para relajarme?',
-      icon: 'leaf-outline',
-      query: 'relajarme',
-    },
-    {
-      label: 'Cual es bueno para dormir mejor?',
-      icon: 'moon-outline',
-      query: 'dormir mejor',
-    },
-    {
-      label: 'Que aceite ayuda con la concentracion?',
-      icon: 'flash-outline',
-      query: 'concentracion',
-    },
+    { label: 'Que aceite me recomiendas para relajarme?', icon: 'leaf-outline', query: 'relajarme' },
+    { label: 'Cual es bueno para dormir mejor?', icon: 'moon-outline', query: 'dormir mejor' },
+    { label: 'Que aceite ayuda con la concentracion?', icon: 'flash-outline', query: 'concentracion' },
   ];
 
   readonly shortcuts = [

@@ -49,6 +49,7 @@ respondSuccess([
     'token' => $uid,
     'user' => [
         'id' => $userId,
+        'uid' => $uid,
         'username' => $username,
         'name' => $name,
         'email' => $email,

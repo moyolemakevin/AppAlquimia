@@ -50,13 +50,13 @@ export class UsersService {
     const body: Record<string, unknown> = {};
 
     if (payload.rol !== undefined) {
-      body.rol = payload.rol;
+      body['rol'] = payload.rol;
     }
     if (payload.nivel !== undefined) {
-      body.nivel = payload.nivel;
+      body['nivel'] = payload.nivel;
     }
     if (payload.activo !== undefined) {
-      body.activo = typeof payload.activo === 'boolean' ? (payload.activo ? 1 : 0) : payload.activo;
+      body['activo'] = typeof payload.activo === 'boolean' ? (payload.activo ? 1 : 0) : payload.activo;
     }
 
     return this.http
@@ -79,3 +79,4 @@ export class UsersService {
     };
   }
 }
+

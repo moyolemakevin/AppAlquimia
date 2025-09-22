@@ -11,10 +11,10 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
+  IonImg,
   IonInput,
   IonItem,
   IonLabel,
-  IonList,
   IonSearchbar,
   IonSpinner,
   IonText,
@@ -23,14 +23,14 @@ import {
 } from '@ionic/angular/standalone';
 import { ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { heartOutline, heart, funnelOutline } from 'ionicons/icons';
+import { heartOutline, heart, funnelOutline, leafOutline, sparklesOutline } from 'ionicons/icons';
 import { Subject, takeUntil, take } from 'rxjs';
 
 import { AceitesService } from '../../core/services/aceites.service';
 import { FavoritesService } from '../../core/services/favorites.service';
 import { Aceite } from '../../core/models';
 
-addIcons({ heart: heart, 'heart-outline': heartOutline, 'funnel-outline': funnelOutline });
+addIcons({ heart: heart, 'heart-outline': heartOutline, 'funnel-outline': funnelOutline, 'leaf-outline': leafOutline, 'sparkles-outline': sparklesOutline });
 
 @Component({
   selector: 'app-aceites',
@@ -43,12 +43,12 @@ addIcons({ heart: heart, 'heart-outline': heartOutline, 'funnel-outline': funnel
     IonContent,
     IonSearchbar,
     IonChip,
-    IonList,
-    IonCard,
+      IonCard,
     IonCardHeader,
     IonCardTitle,
     IonCardSubtitle,
     IonCardContent,
+    IonImg,
     IonButton,
     IonIcon,
     IonText,
@@ -104,9 +104,10 @@ export class AceitesPage implements OnInit, OnDestroy {
     this.advancedFiltersVisible.update((value) => !value);
   }
 
-  updateAdvancedFilter(field: 'uso' | 'emocion', value: string): void {
+  updateAdvancedFilter(field: 'uso' | 'emocion', value: string | null | undefined): void {
     const current = this.advancedFilters();
-    this.advancedFilters.set({ ...current, [field]: value.trim() });
+    const normalized = (value ?? '').toString().trim();
+    this.advancedFilters.set({ ...current, [field]: normalized });
     this.applyFilters();
   }
 
@@ -121,7 +122,10 @@ export class AceitesPage implements OnInit, OnDestroy {
         const updated = { ...aceite, isFavorite: !isFav };
         this.aceites.update((items) => items.map((item) => (item.id === aceite.id ? updated : item)));
         this.applyFilters();
-        await this.presentToast(updated.isFavorite ? 'Agregado a favoritos' : 'Eliminado de favoritos', updated.isFavorite ? 'success' : 'medium');
+        await this.presentToast(
+          updated.isFavorite ? 'Agregado a favoritos' : 'Eliminado de favoritos',
+          updated.isFavorite ? 'success' : 'medium',
+        );
       },
       error: async () => {
         await this.presentToast('No fue posible actualizar el favorito', 'danger');
@@ -154,7 +158,14 @@ export class AceitesPage implements OnInit, OnDestroy {
     const emocionTerm = emocion.toLowerCase();
 
     const filtered = this.aceites().filter((aceite) => {
-      const textPool = `${aceite.nombre} ${aceite.descripcion ?? ''} ${aceite.beneficios ?? ''} ${aceite.emociones_relacionadas ?? ''} ${aceite.usos ?? ''}`.toLowerCase();
+      const fields = [
+        aceite.nombre ?? '',
+        aceite.descripcion ?? '',
+        aceite.beneficios ?? '',
+        aceite.emociones_relacionadas ?? '',
+        aceite.usos ?? '',
+      ];
+      const textPool = fields.join(' ').toLowerCase();
       const matchesSearch = term === '' || textPool.includes(term);
       const matchesCategory =
         category === '' ||
@@ -169,8 +180,14 @@ export class AceitesPage implements OnInit, OnDestroy {
     this.filteredAceites.set(filtered);
   }
 
-  private async presentToast(message: string, color: 'primary' | 'success' | 'danger' | 'medium' = 'primary'): Promise<void> {
+  private async presentToast(
+    message: string,
+    color: 'primary' | 'success' | 'danger' | 'medium' = 'primary',
+  ): Promise<void> {
     const toast = await this.toastController.create({ message, duration: 2000, position: 'bottom', color });
     await toast.present();
   }
 }
+
+
+

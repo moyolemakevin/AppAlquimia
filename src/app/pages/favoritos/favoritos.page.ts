@@ -10,8 +10,6 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
-  IonLabel,
-  IonList,
   IonRefresher,
   IonRefresherContent,
   IonSpinner,
@@ -40,7 +38,6 @@ addIcons({ heart: heart, 'heart-outline': heartOutline });
     IonContent,
     IonRefresher,
     IonRefresherContent,
-    IonList,
     IonCard,
     IonCardHeader,
     IonCardTitle,
@@ -50,7 +47,6 @@ addIcons({ heart: heart, 'heart-outline': heartOutline });
     IonIcon,
     IonText,
     IonSpinner,
-    IonLabel,
   ],
   templateUrl: './favoritos.page.html',
   styleUrls: ['./favoritos.page.scss'],
@@ -117,3 +113,5 @@ export class FavoritosPage implements OnInit {
     await toast.present();
   }
 }
+
+

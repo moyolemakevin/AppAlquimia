@@ -1,0 +1,149 @@
+﻿INFORME INTEGRAL DEL PROYECTO "ALQUIMIA ESENCIAL"
+Fecha: 21 de septiembre de 2025
+Elaborado por: Codex (Auditor Tecnico)
+
+1. INTRODUCCION
+Alquimia Esencial es una plataforma integral de aromaterapia compuesta por una aplicacion hibrida (Angular 20 + Ionic 8) y un backend en PHP 8.2 con MariaDB 10.4 ejecutado sobre XAMPP. El sistema permite explorar aceites esenciales, mantener tips y favoritos, administrar usuarios y dialogar con un asistente inteligente. Este informe resume la arquitectura, funcionamiento, seguridad, despliegue y mejoras recientes, incorporando toda la informacion recolectada durante la auditoria.
+
+2. ARQUITECTURA GLOBAL
+Frontend
+  - Angular + Ionic basados en componentes standalone. El layout principal vive en "src/app/layout/main-layout.*" y contiene menu lateral, branding y router.  
+  - Las paginas se ubican en "src/app/pages/" (aceites, asistente, admin, auth, favoritos, tips, profile). Cada pagina declara sus dependencias Ionic y consume servicios para hablar con la API.
+Backend
+  - Carpeta "api/" con endpoints organizados por dominio: auth, assistant, aceites, tips, usuarios, dashboard.  
+  - "bootstrap.php" configura cabeceras CORS, atiende OPTIONS, abre la conexion PDO y registra helpers.  
+  - Helpers: "helpers/response.php" centraliza respuestas (success/error); "helpers/auth.php" valida tokens y roles.
+Base de datos
+  - Script "alquimia_esencial (4).sql" crea tablas (usuarios, aceites, tips, favoritos, chatlogs, etc.) e inserta datos de ejemplo.  
+  - Se importa en MariaDB via phpMyAdmin dentro de XAMPP.
+
+3. FRONTEND (CARPETA SRC)
+3.1 Modulos clave
+  - src/app/app.routes.ts: define rutas publicas (login, register, forgot-password) y protegidas (/app) con guards `authGuard` y `adminGuard`.  
+  - src/app/layout/main-layout.component.{ts,html,scss}: layout con IonSplitPane, IonMenu y saludo dinamico.  
+  - src/app/core/services: `auth.service.ts`, `aceites.service.ts`, `tips.service.ts`, `assistant.service.ts`, `users.service.ts`, `favorites.service.ts`, `profile.service.ts`, `dashboard.service.ts`.  
+  - src/app/core/interceptors/auth.interceptor.ts agrega Authorization Bearer y desloguea en 401.
+3.2 Paginas destacadas
+  - auth/login, register, forgot-password: formularios reactivos y toasts.  
+  - home: bienvenida, shortcuts y aceites destacados.  
+  - aceites: hero con metricas, filtros basicos/avanzados, tarjetas con beneficios, usos y placeholder `assets/img/aceite-placeholder.svg`.  
+  - assistant: onboarding visual, quick prompts, chat con avatares y sugerencias dinamicas.  
+  - admin: panel con CRUD de aceites/tips y gestion de usuarios.  
+  - profile y profile/edit: muestran datos y estadisticas del usuario autenticado.
+3.3 Estilos y assets
+  - SCSS por componente; `src/global.scss` y `src/theme/variables.scss` definen paleta.  
+  - `assets/img/logo-alquimia.svg` y `assets/img/aceite-placeholder.svg` aportan identidad.
+
+4. BACKEND (CARPETA API)
+4.1 Bootstrap y helpers
+  - bootstrap.php: carga config/database, response, auth; inicializa PDO y maneja preflight.  
+  - response.php: `respondSuccess`, `respondError`, `getJsonInput`, `getBearerToken`.  
+  - auth.php: `requireAuth`, `requireAdmin`, `findUserByToken`.
+4.2 Configuracion DB
+  - config/database.php: clase Database con host, nombre de base, usuario, password. Por defecto `root` sin password (XAMPP).  
+  - Ajustar para entornos productivos con usuarios de permisos limitados.
+4.3 Endpoint resumen
+  - auth/login.php, auth/register.php, auth/forgot-password.php.  
+  - assistant/chat.php: normaliza texto, maneja sinonimos, busca aceites/tips, genera respuesta contextual y sugerencias; registra chatlogs.  
+  - aceites/index/create/update/delete.php.  
+  - tips/index.php + operaciones admin.  
+  - usuarios/index.php (listado/actualizacion admin) y usuarios/profile.php (perfil autenticado).  
+  - favoritos/add/remove y dashboard/stats.
+
+5. BASE DE DATOS
+  - `usuarios`: contrasenas BCRYPT, roles `admin` o `usuario`, estado `activo`.  
+  - `aceites`: nombre, descripcion, beneficios, usos, precauciones, multimedia y fecha de alta.  
+  - `tips`: titulo, contenido, tipo y metadata.  
+  - `favoritos`: relacion usuario-aceite.  
+  - `chatlogs`: historial del asistente.  
+  - Recomendacion: agregar indices en campos consultados con LIKE y asegurar principio de menor privilegio al usuario de DB.
+
+6. FLUJOS PRINCIPALES
+6.1 Autenticacion
+  - Login: `AuthService.login` -> `api/auth/login.php` -> valida -> responde token/usuario -> localStorage -> interceptor.  
+  - Registro: crea usuario y devuelve token.  
+  - Restore session: `AuthService.restoreSession` lee localStorage y repuebla `userSubject`.
+6.2 Favoritos
+  - `AceitesPage` llama a `favoritesService.addFavorite/removeFavorite`; actualiza estado local y muestra toasts.  
+  - Backend registra en `favoritos` asociado a usuario.
+6.3 Asistente IA
+  - `AssistantService` envia mensaje; backend normaliza, detecta temas, consulta aceites/tips, arma respuesta y sugerencias, registra en `chatlogs`.  
+  - Frontend actualiza lista de mensajes y chips sugeridos, con avatares diferenciados.
+
+7. CALIDAD DE CODIGO Y ESTADO
+Aspectos positivos
+  - Servicios Angular bien encapsulados, uso de Observables (`take(1)`, `takeUntil`).  
+  - Backend con helpers compartidos y uso consistente de consultas preparadas.  
+  - Interceptor y guards simplifican la seguridad en una sola capa.  
+  - Asistente robustecido con analisis lexico y fallback cuando iconv no esta disponible.
+Aspectos a mejorar
+  - No hay pruebas unitarias ni e2e formalizadas.  
+  - Tokens sin expiracion ni refresco.  
+  - Falta pipeline CI/CD y monitoreo automatico.
+
+8. DESPLIEGUE CON XAMPP
+Pasos basicos
+  1. Copiar el proyecto a `C:\xampp\htdocs\AppAlquimia`.  
+  2. Importar `alquimia_esencial (4).sql` en MariaDB.  
+  3. Ajustar credenciales en `api/config/database.php` si es necesario.  
+  4. Definir `environment.ts` -> `apiUrl = 'http://localhost/AppAlquimia/api'`.  
+  5. Ejecutar `npm install` y `ionic serve --host=localhost --port=8100`.  
+  6. Probar logins con usuarios del script (admin/alquimia2025, etc.).
+Build y empaquetado
+  - `ionic build` genera produccion en `www/`.  
+  - `ionic cap sync android` para version movil.
+
+9. GESTION DE VERSIONES (GIT Y GITHUB)
+  - El proyecto se mantiene en un repositorio Git alojado en GitHub.  
+  - Se utilizan ramas de trabajo para nuevas caracteristicas, que luego se integran mediante pull requests revisados.  
+  - Los commits siguen una nomenclatura descriptiva (ej.: `feat/assistant`, `fix/auth-service`) y se registran en issues/tickets asociados.  
+  - GitHub Actions esta disponible para ampliar con flujos de integracion continua (recomendado habilitar lint/test automaticos).  
+  - Se aconseja publicar tags por version y adjuntar changelog en cada release.
+
+10. CAMBIOS REALIZADOS DURANTE LA AUDITORIA
+Backend
+  - Ajuste en `api/auth/login.php` y `register.php` para devolver `uid` dentro del payload y compatibilizar con el frontend.
+  - Refuerzo de `auth.service.ts` para manejar respuestas JSON en formato `{status,data}` y restaurar sesiones previas.
+  - Mejora masiva en `api/assistant/chat.php`: normalizacion de texto, mapa de sinonimos extendido, busqueda dinamica en tablas `aceites` y `tips`, sugerencias contextualizadas y manejo seguro de iconv.
+  - Ajustes menores en helpers y endpoints para mensajes mas claros.
+Frontend
+  - Rediseño del layout principal (logo, gradientes, menu estilizado).
+  - Renovacion de la pagina de aceites con hero, filtros avanzados y tarjetas enriquecidas.
+  - Nueva experiencia del asistente con hero onboarding, avatares, chips de inicio rapido y sugerencias dinamicas.
+  - Integracion de assets SVG (`logo-alquimia.svg`, `aceite-placeholder.svg`).
+  - Documentacion actualizada (`documentacion_completa.md`, `analisis_general.txt`, informes globales).
+Infraestructura documental
+  - Generacion de auditoria tecnica (`auditoria_alquimia_esencial.txt`).
+  - Elaboracion de informe global (version v1 y v2) y analisis funcional en lenguaje coloquial.
+  - Creacion de informe unico (este archivo) con todo el material consolidado.
+
+11. MANTENIMIENTO RECOMENDADO
+Documentacion
+  - Mantener README con instrucciones de instalacion, despliegue, variables y credenciales.  
+  - Actualizar CHANGELOG con cada release.
+Pruebas
+  - Implementar pruebas unitarias (Jasmine/Karma) y PHPUnit.  
+  - Configurar pruebas e2e (Cypress/Ionic).
+Seguridad
+  - Agregar expiracion y refresh de tokens, limites de intentos de login y HTTPS en produccion.  
+  - Registrar logs de acceso y errores.
+Rendimiento y observabilidad
+  - Indexar campos consultados con LIKE.  
+  - Instrumentar logging estructurado y monitoreo (Sentry, logrotate).  
+  - Considerar caching para queries comunes del asistente.
+UX futuro
+  - Paginacion o virtual scroll en listas largas.  
+  - Modo offline o caching PWA.  
+  - Configurador para entrenar nuevas respuestas del asistente sin tocar codigo.
+
+12. CONCLUSIONES
+Alquimia Esencial combina un diseño cuidado con una arquitectura escalable. Las mejoras recientes en UI, branding y motor conversacional elevan la percepcion de calidad. El uso de GitHub como repositorio central facilita el versionado y colaboracion. Para llevar el proyecto al siguiente nivel es esencial formalizar pruebas automatizadas, endurecer la seguridad y mantener documentacion viva. El codigo actual es una base robusta sobre la cual continuar evolucionando.
+
+13. ANEXOS
+  - auditoria_alquimia_esencial.txt (informe tecnico detallado).  
+  - analisis_general.txt (sintesis funcional).  
+  - documentacion_completa.md (guia practica).  
+  - informe_global_alquimia_esencial.txt (version previa).  
+  - informe_global_alquimia_esencial_v2.txt (version mejorada con historial de cambios y seccion GitHub).
+
+FIN DEL INFORME.

@@ -6,7 +6,6 @@ import {
   IonAccordionGroup,
   IonButton,
   IonCard,
-  IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
@@ -24,8 +23,6 @@ import {
   IonSegmentButton,
   IonSelect,
   IonSelectOption,
-  IonSpinner,
-  IonText,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
@@ -39,6 +36,13 @@ import { AceitesService } from '../../core/services/aceites.service';
 import { TipsService } from '../../core/services/tips.service';
 import { UsersService } from '../../core/services/users.service';
 import { DashboardData, Aceite, Tip, User } from '../../core/models';
+
+type AdminRole = 'admin' | 'usuario';
+interface AdminUserChanges {
+  role?: AdminRole;
+  level?: string;
+  active?: boolean;
+}
 
 addIcons({ 'analytics-outline': analyticsOutline, 'construct-outline': constructOutline, 'people-outline': peopleOutline });
 
@@ -59,8 +63,6 @@ addIcons({ 'analytics-outline': analyticsOutline, 'construct-outline': construct
     IonCardHeader,
     IonCardTitle,
     IonCardSubtitle,
-    IonCardContent,
-    IonSpinner,
     IonButton,
     IonIcon,
     IonAccordionGroup,
@@ -73,7 +75,6 @@ addIcons({ 'analytics-outline': analyticsOutline, 'construct-outline': construct
     IonSegmentButton,
     IonSelect,
     IonSelectOption,
-    IonText,
   ],
   templateUrl: './admin.page.html',
   styleUrls: ['./admin.page.scss'],
@@ -238,13 +239,39 @@ export class AdminPage implements OnInit {
     });
   }
 
-  updateUser(user: User, changes: Partial<User>): void {
+  onRoleChange(user: User, event: any): void {
+    const value = event?.detail?.value === 'admin' ? 'admin' : 'usuario';
+    this.updateUser(user, { role: value });
+  }
+
+  onLevelChange(user: User, event: any): void {
+    const level = (event?.detail?.value ?? 'Novato') as string;
+    this.updateUser(user, { level });
+  }
+
+  toggleUserStatus(user: User): void {
+    this.updateUser(user, { active: !user.active });
+  }
+
+  private updateUser(user: User, changes: AdminUserChanges): void {
+    const payload: { rol?: AdminRole; nivel?: string; activo?: boolean | number } = {};
+
+    if (changes.role && changes.role !== user.role) {
+      payload.rol = changes.role;
+    }
+    if (changes.level && changes.level !== user.level) {
+      payload.nivel = changes.level;
+    }
+    if (changes.active !== undefined && changes.active !== user.active) {
+      payload.activo = changes.active;
+    }
+
+    if (Object.keys(payload).length === 0) {
+      return;
+    }
+
     this.usersService
-      .updateUser(user.id, {
-        rol: changes.role ?? user.role,
-        nivel: changes.level ?? user.level,
-        activo: changes.active ?? user.active,
-      })
+      .updateUser(user.id, payload)
       .pipe(take(1))
       .subscribe({
         next: async () => {

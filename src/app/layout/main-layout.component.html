@@ -1,21 +1,27 @@
-<ion-app>
+﻿<ion-app>
   <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content">
+    <ion-menu contentId="main-content" class="app-menu">
       <ion-header>
-        <ion-toolbar color="primary">
-          <ion-title>Alquimia Esencial</ion-title>
+        <ion-toolbar>
+          <div class="brand">
+            <img src="assets/img/logo-alquimia.svg" alt="Logo de Alquimia Esencial" />
+            <div class="brand-text">
+              <span class="brand-name">Alquimia</span>
+              <span class="brand-tagline">Esencial</span>
+            </div>
+          </div>
         </ion-toolbar>
       </ion-header>
-      <ion-content>
+      <ion-content class="menu-content">
         <div class="user-summary" *ngIf="user() as currentUser">
           <h2>{{ greeting() }}</h2>
           <p>{{ currentUser.role === 'admin' ? 'Administrador' : 'Usuario' }}</p>
           <small>{{ currentUser.email }}</small>
         </div>
-        <ion-list>
+        <ion-list lines="none">
           <ng-container *ngFor="let item of menuItems">
             <ion-menu-toggle auto-hide="false" *ngIf="canDisplay(item)">
-              <ion-item button lines="none" detail="false" (click)="handleMenuItem(item)">
+              <ion-item class="menu-item" button detail="false" (click)="handleMenuItem(item)">
                 <ion-icon [name]="item.icon" slot="start"></ion-icon>
                 <ion-label>{{ item.label }}</ion-label>
               </ion-item>

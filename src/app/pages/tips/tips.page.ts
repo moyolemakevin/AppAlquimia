@@ -1,7 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -10,7 +9,7 @@ import {
   IonChip,
   IonContent,
   IonHeader,
-  IonIcon,
+  IonLabel,
   IonSearchbar,
   IonSpinner,
   IonText,
@@ -37,6 +36,7 @@ addIcons({ 'bulb-outline': bulbOutline });
     IonContent,
     IonSearchbar,
     IonChip,
+    IonLabel,
     IonCard,
     IonCardHeader,
     IonCardTitle,
@@ -44,8 +44,6 @@ addIcons({ 'bulb-outline': bulbOutline });
     IonCardContent,
     IonText,
     IonSpinner,
-    IonButton,
-    IonIcon,
   ],
   templateUrl: './tips.page.html',
   styleUrls: ['./tips.page.scss'],

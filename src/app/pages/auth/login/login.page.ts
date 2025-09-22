@@ -15,10 +15,7 @@ import {
   IonText,
   IonTitle,
   IonToolbar,
-  IonHeader,
-  IonPage,
-  IonButtons,
-  IonSpinner,
+  IonHeader,  IonSpinner,
 } from '@ionic/angular/standalone';
 import { Router, RouterModule } from '@angular/router';
 import { ToastController } from '@ionic/angular';
@@ -33,7 +30,6 @@ import { AuthService } from '../../../core/services/auth.service';
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
-    IonPage,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -43,9 +39,7 @@ import { AuthService } from '../../../core/services/auth.service';
     IonLabel,
     IonInput,
     IonText,
-    IonButton,
-    IonButtons,
-    IonSpinner,
+    IonButton,    IonSpinner,
   ],
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
@@ -99,7 +93,7 @@ export class LoginPage {
           this.isSubmitting = false;
           this.form.enable();
           this.apiError = error?.error?.message ?? 'No fue posible iniciar sesion';
-          await this.presentToast(this.apiError, 'danger');
+          await this.presentToast(this.apiError ?? 'No fue posible iniciar sesion', 'danger');
         },
       });
   }
@@ -115,3 +109,6 @@ export class LoginPage {
     await toast.present();
   }
 }
+
+
+

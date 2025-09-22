@@ -16,7 +16,6 @@ import {
   IonTitle,
   IonToolbar,
   IonHeader,
-  IonPage,
   IonSpinner,
 } from '@ionic/angular/standalone';
 import { Router, RouterModule } from '@angular/router';
@@ -32,7 +31,6 @@ import { AuthService } from '../../../core/services/auth.service';
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
-    IonPage,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -112,7 +110,7 @@ export class RegisterPage {
           this.isSubmitting = false;
           this.form.enable();
           this.apiError = error?.error?.message ?? 'No se pudo crear la cuenta';
-          await this.presentToast(this.apiError, 'danger');
+          await this.presentToast(this.apiError ?? 'No se pudo crear la cuenta', 'danger');
         },
       });
   }

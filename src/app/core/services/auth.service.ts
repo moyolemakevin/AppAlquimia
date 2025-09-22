@@ -24,6 +24,18 @@ export interface ForgotPasswordPayload {
   newPassword?: string;
 }
 
+interface ApiResponse<T> {
+  status: string;
+  data: T;
+  message?: string;
+}
+
+interface ForgotPasswordResult {
+  question?: string;
+  requiresAnswer?: boolean;
+  message?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
@@ -51,18 +63,26 @@ export class AuthService {
 
   login(payload: LoginPayload): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>(`${this.apiUrl}/auth/login.php`, payload)
-      .pipe(tap((response) => this.persistSession(response)));
+      .post<ApiResponse<AuthResponse>>(`${this.apiUrl}/auth/login.php`, payload)
+      .pipe(
+        map((response) => response.data),
+        tap((authResponse) => this.persistSession(authResponse)),
+      );
   }
 
   register(payload: RegisterPayload): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>(`${this.apiUrl}/auth/register.php`, payload)
-      .pipe(tap((response) => this.persistSession(response)));
+      .post<ApiResponse<AuthResponse>>(`${this.apiUrl}/auth/register.php`, payload)
+      .pipe(
+        map((response) => response.data),
+        tap((authResponse) => this.persistSession(authResponse)),
+      );
   }
 
-  forgotPassword(payload: ForgotPasswordPayload): Observable<unknown> {
-    return this.http.post(`${this.apiUrl}/auth/forgot-password.php`, payload);
+  forgotPassword(payload: ForgotPasswordPayload): Observable<ForgotPasswordResult> {
+    return this.http
+      .post<ApiResponse<ForgotPasswordResult>>(`${this.apiUrl}/auth/forgot-password.php`, payload)
+      .pipe(map((response) => response.data));
   }
 
   logout(): void {
@@ -72,6 +92,7 @@ export class AuthService {
 
   updateCachedUser(user: User): void {
     const session = this.getStoredSession();
+
     if (session) {
       session.user = user;
       this.persistSession(session);
@@ -87,12 +108,27 @@ export class AuthService {
 
   private getStoredSession(): AuthResponse | null {
     const raw = localStorage.getItem(this.storageKey);
+
     if (!raw) {
       return null;
     }
 
     try {
-      return JSON.parse(raw) as AuthResponse;
+      const parsed = JSON.parse(raw);
+
+      if (parsed && typeof parsed === 'object') {
+        if ('user' in parsed && parsed.user) {
+          return parsed as AuthResponse;
+        }
+
+        if ('data' in parsed && (parsed.data as AuthResponse | undefined)?.user) {
+          const normalized = parsed.data as AuthResponse;
+          this.persistSession(normalized);
+          return normalized;
+        }
+      }
+
+      return null;
     } catch (error) {
       localStorage.removeItem(this.storageKey);
       return null;
@@ -101,6 +137,7 @@ export class AuthService {
 
   private restoreSession(): void {
     const session = this.getStoredSession();
+
     if (session?.user) {
       this.userSubject.next(session.user);
     }

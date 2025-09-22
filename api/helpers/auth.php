@@ -1,11 +1,9 @@
 <?php
 declare(strict_types=1);
 
-use PDO;
-
 require_once __DIR__ . '/response.php';
 
-function findUserByToken(PDO $db, ?string $token): ?array
+function findUserByToken(\PDO $db, ?string $token): ?array
 {
     if ($token === null || trim($token) === '') {
         return null;
@@ -18,7 +16,7 @@ function findUserByToken(PDO $db, ?string $token): ?array
     return $user ?: null;
 }
 
-function requireAuth(PDO $db): array
+function requireAuth(\PDO $db): array
 {
     $token = getBearerToken();
     $user = findUserByToken($db, $token);
@@ -30,7 +28,7 @@ function requireAuth(PDO $db): array
     return $user;
 }
 
-function requireAdmin(PDO $db): array
+function requireAdmin(\PDO $db): array
 {
     $user = requireAuth($db);
     if (($user['rol'] ?? '') !== 'admin') {

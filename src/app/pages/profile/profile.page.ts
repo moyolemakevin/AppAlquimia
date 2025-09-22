@@ -9,8 +9,6 @@ import {
   IonCardTitle,
   IonContent,
   IonHeader,
-  IonIcon,
-  IonList,
   IonText,
   IonTitle,
   IonToolbar,
@@ -40,8 +38,6 @@ addIcons({ 'person-circle-outline': personCircleOutline });
     IonCardSubtitle,
     IonCardContent,
     IonButton,
-    IonIcon,
-    IonList,
     IonText,
   ],
   templateUrl: './profile.page.html',
@@ -80,3 +76,4 @@ export class ProfilePage implements OnInit {
       });
   }
 }
+

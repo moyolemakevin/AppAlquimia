@@ -1,5 +1,4 @@
-<ion-page>
-  <ion-header>
+<ion-header>
     <ion-toolbar color="primary">
       <ion-title>Panel de administracion</ion-title>
     </ion-toolbar>
@@ -149,7 +148,7 @@
                 <h3>{{ user.name || user.username }}</h3>
                 <p>{{ user.email }}</p>
               </ion-label>
-              <ion-segment [value]="user.role" (ionChange)="updateUser(user, { role: $event.detail.value })">
+              <ion-segment [value]="user.role" (ionChange)="onRoleChange(user, $event)">
                 <ion-segment-button value="usuario">Usuario</ion-segment-button>
                 <ion-segment-button value="admin">Admin</ion-segment-button>
               </ion-segment>
@@ -157,7 +156,7 @@
                 interface="popover"
                 placeholder="Nivel"
                 [value]="user.level"
-                (ionChange)="updateUser(user, { level: $event.detail.value })"
+                (ionChange)="onLevelChange(user, $event)"
               >
                 <ion-select-option value="Novato">Novato</ion-select-option>
                 <ion-select-option value="Experto">Experto</ion-select-option>
@@ -167,7 +166,7 @@
                 fill="clear"
                 size="small"
                 [color]="user.active ? 'success' : 'medium'"
-                (click)="updateUser(user, { active: !user.active })"
+                (click)="toggleUserStatus(user)"
               >
                 {{ user.active ? 'Activo' : 'Inactivo' }}
               </ion-button>
@@ -177,3 +176,5 @@
       </ion-accordion>
     </ion-accordion-group>
   </ion-content>
+
+

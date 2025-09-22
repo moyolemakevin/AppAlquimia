@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject, signal } from '@angular/core';
+﻿import { Component, OnDestroy, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
+  IonAvatar,
   IonButton,
   IonContent,
   IonFooter,
@@ -8,6 +9,7 @@ import {
   IonIcon,
   IonInput,
   IonItem,
+  IonLabel,
   IonList,
   IonText,
   IonTitle,
@@ -16,14 +18,37 @@ import {
 } from '@ionic/angular/standalone';
 import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
-import { paperPlaneOutline } from 'ionicons/icons';
+import {
+  chatbubbleEllipsesOutline,
+  flashOutline,
+  happyOutline,
+  leafOutline,
+  moonOutline,
+  paperPlaneOutline,
+  sparklesOutline,
+} from 'ionicons/icons';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, take, takeUntil } from 'rxjs';
 
 import { AssistantService } from '../../core/services/assistant.service';
 import { ChatMessage } from '../../core/models';
 
-addIcons({ 'paper-plane-outline': paperPlaneOutline });
+addIcons({
+  'paper-plane-outline': paperPlaneOutline,
+  'sparkles-outline': sparklesOutline,
+  'leaf-outline': leafOutline,
+  'flash-outline': flashOutline,
+  'moon-outline': moonOutline,
+  'happy-outline': happyOutline,
+  'chatbubble-ellipses-outline': chatbubbleEllipsesOutline,
+});
+
+interface QuickPrompt {
+  label: string;
+  icon: string;
+  description: string;
+  query: string;
+}
 
 @Component({
   selector: 'app-assistant',
@@ -37,12 +62,14 @@ addIcons({ 'paper-plane-outline': paperPlaneOutline });
     IonContent,
     IonList,
     IonItem,
+    IonLabel,
     IonText,
     IonFooter,
     IonInput,
     IonButton,
     IonIcon,
     IonChip,
+    IonAvatar,
   ],
   templateUrl: './assistant.page.html',
   styleUrls: ['./assistant.page.scss'],
@@ -64,6 +91,39 @@ export class AssistantPage implements OnInit, OnDestroy {
   suggestions = signal<string[]>([]);
   currentMessage = '';
   isSending = false;
+
+  readonly quickPrompts: QuickPrompt[] = [
+    {
+      label: 'Relajacion nocturna',
+      icon: 'moon-outline',
+      description: 'Rutina antes de dormir',
+      query: 'Que aceite puedo usar para relajarme antes de dormir?'
+    },
+    {
+      label: 'Energia y enfoque',
+      icon: 'flash-outline',
+      description: 'Impulso matutino',
+      query: 'Necesito un aceite para concentrarme y tener mas energia.'
+    },
+    {
+      label: 'Cuidado de piel',
+      icon: 'happy-outline',
+      description: 'Rutina facial natural',
+      query: 'Recomiendame un aceite esencial para mejorar la piel del rostro.'
+    },
+    {
+      label: 'Ambiente zen',
+      icon: 'leaf-outline',
+      description: 'Difusor equilibrado',
+      query: 'Que mezcla puedo usar en el difusor para crear un ambiente zen?'
+    },
+    {
+      label: 'Mascotas seguras',
+      icon: 'sparkles-outline',
+      description: 'Bienestar para peludos',
+      query: 'Hay aceites seguros para usar cerca de mis mascotas?'
+    }
+  ];
 
   ngOnInit(): void {
     this.route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe((params) => {
@@ -131,3 +191,4 @@ export class AssistantPage implements OnInit, OnDestroy {
     requestAnimationFrame(() => this.content?.scrollToBottom(200));
   }
 }
+
