@@ -1,6 +1,5 @@
 ﻿INFORME INTEGRAL DEL PROYECTO "ALQUIMIA ESENCIAL"
 Fecha: 21 de septiembre de 2025
-Elaborado por: Codex (Auditor Tecnico)
 
 1. INTRODUCCION
 Alquimia Esencial es una plataforma integral de aromaterapia compuesta por una aplicacion hibrida (Angular 20 + Ionic 8) y un backend en PHP 8.2 con MariaDB 10.4 ejecutado sobre XAMPP. El sistema permite explorar aceites esenciales, mantener tips y favoritos, administrar usuarios y dialogar con un asistente inteligente. Este informe resume la arquitectura, funcionamiento, seguridad, despliegue y mejoras recientes, incorporando toda la informacion recolectada durante la auditoria.
