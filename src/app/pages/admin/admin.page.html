@@ -1,51 +1,39 @@
 <ion-header>
-    <ion-toolbar color="primary">
-      <ion-title>Panel de administracion</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content fullscreen>
-    <section class="stats" *ngIf="dashboard() as data">
-      <ion-grid>
-        <ion-row>
-          <ion-col size="6" sizeMd="3">
-            <ion-card>
-              <ion-card-header>
-                <ion-card-title>{{ data.counts.aceites }}</ion-card-title>
-                <ion-card-subtitle>Aceites</ion-card-subtitle>
-              </ion-card-header>
-            </ion-card>
-          </ion-col>
-          <ion-col size="6" sizeMd="3">
-            <ion-card>
-              <ion-card-header>
-                <ion-card-title>{{ data.counts.usuarios }}</ion-card-title>
-                <ion-card-subtitle>Usuarios</ion-card-subtitle>
-              </ion-card-header>
-            </ion-card>
-          </ion-col>
-          <ion-col size="6" sizeMd="3">
-            <ion-card>
-              <ion-card-header>
-                <ion-card-title>{{ data.counts.tips }}</ion-card-title>
-                <ion-card-subtitle>Tips</ion-card-subtitle>
-              </ion-card-header>
-            </ion-card>
-          </ion-col>
-          <ion-col size="6" sizeMd="3">
-            <ion-card>
-              <ion-card-header>
-                <ion-card-title>{{ data.counts.favoritos }}</ion-card-title>
-                <ion-card-subtitle>Favoritos</ion-card-subtitle>
-              </ion-card-header>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </section>
+  <ion-toolbar color="primary">
+    <ion-title>Panel de administracion</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-    <ion-accordion-group>
+<ion-content fullscreen class="app-shell admin-page">
+  <section class="surface-section admin-overview" *ngIf="dashboard() as data">
+    <div class="section-header">
+      <h3>Indicadores clave</h3>
+      <p>Monitorea actividad en tiempo real y gestiona contenido de la plataforma.</p>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <span class="metric-title">Aceites</span>
+        <span class="metric-value">{{ data.counts.aceites }}</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-title">Usuarios</span>
+        <span class="metric-value">{{ data.counts.usuarios }}</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-title">Tips</span>
+        <span class="metric-value">{{ data.counts.tips }}</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-title">Favoritos</span>
+        <span class="metric-value">{{ data.counts.favoritos }}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="surface-section admin-forms">
+    <ion-accordion-group class="admin-accordion">
       <ion-accordion value="aceites">
-        <ion-item slot="header" color="light">
+        <ion-item slot="header" color="light" class="accordion-header">
           <ion-icon slot="start" name="construct-outline"></ion-icon>
           <ion-label>Gestionar aceites</ion-label>
         </ion-item>
@@ -55,6 +43,10 @@
               <ion-item>
                 <ion-label position="stacked">Nombre</ion-label>
                 <ion-input formControlName="nombre"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Imagen (URL)</ion-label>
+                <ion-input formControlName="imagen_url" placeholder="https://..."></ion-input>
               </ion-item>
               <ion-item>
                 <ion-label position="stacked">Descripcion</ion-label>
@@ -83,21 +75,23 @@
             </div>
           </form>
 
-          <ion-list>
+          <ion-list class="admin-list">
             <ion-item *ngFor="let aceite of aceites()">
               <ion-label>
                 <h3>{{ aceite.nombre }}</h3>
                 <p>{{ aceite.beneficios }}</p>
               </ion-label>
               <ion-button fill="clear" size="small" (click)="editAceite(aceite)">Editar</ion-button>
-              <ion-button fill="clear" size="small" color="danger" (click)="deleteAceite(aceite.id)">Eliminar</ion-button>
+              <ion-button fill="clear" size="small" color="danger" (click)="deleteAceite(aceite.id)">
+                Eliminar
+              </ion-button>
             </ion-item>
           </ion-list>
         </div>
       </ion-accordion>
 
       <ion-accordion value="tips">
-        <ion-item slot="header" color="light">
+        <ion-item slot="header" color="light" class="accordion-header">
           <ion-icon slot="start" name="analytics-outline"></ion-icon>
           <ion-label>Gestionar tips</ion-label>
         </ion-item>
@@ -123,7 +117,7 @@
             </div>
           </form>
 
-          <ion-list>
+          <ion-list class="admin-list">
             <ion-item *ngFor="let tip of tips()">
               <ion-label>
                 <h3>{{ tip.titulo }}</h3>
@@ -137,12 +131,12 @@
       </ion-accordion>
 
       <ion-accordion value="usuarios">
-        <ion-item slot="header" color="light">
+        <ion-item slot="header" color="light" class="accordion-header">
           <ion-icon slot="start" name="people-outline"></ion-icon>
           <ion-label>Gestionar usuarios</ion-label>
         </ion-item>
         <div class="accordion-content" slot="content">
-          <ion-list>
+          <ion-list class="admin-list">
             <ion-item *ngFor="let user of users()">
               <ion-label>
                 <h3>{{ user.name || user.username }}</h3>
@@ -175,6 +169,5 @@
         </div>
       </ion-accordion>
     </ion-accordion-group>
-  </ion-content>
-
-
+  </section>
+</ion-content>

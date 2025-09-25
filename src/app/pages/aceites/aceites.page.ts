@@ -23,14 +23,14 @@ import {
 } from '@ionic/angular/standalone';
 import { ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { heartOutline, heart, funnelOutline, leafOutline, sparklesOutline } from 'ionicons/icons';
+import { heartOutline, heart, funnelOutline, leafOutline, sparklesOutline, logoWhatsapp } from 'ionicons/icons';
 import { Subject, takeUntil, take } from 'rxjs';
 
 import { AceitesService } from '../../core/services/aceites.service';
 import { FavoritesService } from '../../core/services/favorites.service';
 import { Aceite } from '../../core/models';
 
-addIcons({ heart: heart, 'heart-outline': heartOutline, 'funnel-outline': funnelOutline, 'leaf-outline': leafOutline, 'sparkles-outline': sparklesOutline });
+addIcons({ heart: heart, 'heart-outline': heartOutline, 'funnel-outline': funnelOutline, 'leaf-outline': leafOutline, 'sparkles-outline': sparklesOutline, 'logo-whatsapp': logoWhatsapp });
 
 @Component({
   selector: 'app-aceites',
@@ -51,8 +51,9 @@ addIcons({ heart: heart, 'heart-outline': heartOutline, 'funnel-outline': funnel
     IonImg,
     IonButton,
     IonIcon,
-    IonText,
+    
     IonSpinner,
+    IonText,
     IonLabel,
     IonItem,
     IonInput,
@@ -74,11 +75,21 @@ export class AceitesPage implements OnInit, OnDestroy {
   advancedFiltersVisible = signal<boolean>(false);
   advancedFilters = signal<{ uso: string; emocion: string }>({ uso: '', emocion: '' });
 
+  readonly fallbackImage = 'assets/img/aceite-placeholder.svg';
+
   readonly categories = [
     { label: 'Relajacion', value: 'relajacion' },
     { label: 'Energia', value: 'energia' },
     { label: 'Sueno', value: 'sueno' },
   ];
+
+  private readonly purchaseContactBaseUrl = 'https://wa.me/593983015307';
+
+  getPurchaseLink(aceite: Aceite): string {
+    const name = aceite.nombre?.trim() || 'aceite esencial';
+    const message = `Hola, me interesa comprar el aceite ${name}. Me ayudas a completar la compra?`;
+    return `${this.purchaseContactBaseUrl}?text=${encodeURIComponent(message)}`;
+  }
 
   ngOnInit(): void {
     this.loadAceites();
@@ -109,6 +120,19 @@ export class AceitesPage implements OnInit, OnDestroy {
     const normalized = (value ?? '').toString().trim();
     this.advancedFilters.set({ ...current, [field]: normalized });
     this.applyFilters();
+  }
+
+  handleImageError(event: Event): void {
+    const target = event.target as (HTMLElement & { src?: string });
+    if (!target) {
+      return;
+    }
+
+    const alreadyApplied = target.getAttribute('data-fallback-applied');
+    if (!alreadyApplied) {
+      target.src = this.fallbackImage;
+      target.setAttribute('data-fallback-applied', 'true');
+    }
   }
 
   toggleFavorite(aceite: Aceite): void {
@@ -188,6 +212,3 @@ export class AceitesPage implements OnInit, OnDestroy {
     await toast.present();
   }
 }
-
-
-

@@ -1,72 +1,88 @@
-﻿<ion-header>
+<ion-header>
   <ion-toolbar color="primary">
     <ion-title>Aceites esenciales</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen class="aceites-content">
-  <div class="aceites-wrapper">
-    <section class="hero">
+<ion-content fullscreen class="app-shell aceites-page">
+  <section class="hero surface-section">
+    <div class="hero-intro">
       <div class="hero-badge">
         <ion-icon name="sparkles-outline"></ion-icon>
-        Colección sensorial
+        Coleccion sensorial
       </div>
-      <h1>Descubre aromas que transforman tu día</h1>
+      <h1>Descubre aromas que transforman tu dia</h1>
       <p>
-        Personaliza tu experiencia aromática con mezclas enfocadas en bienestar emocional, energía y descanso.
+        Personaliza tu experiencia con mezclas enfocadas en descanso, energia y bienestar emocional. Usa los filtros
+        avanzados para encontrar la esencia exacta.
       </p>
-      <div class="hero-metrics">
-        <div class="metric">
+      <div class="hero-metrics metrics-grid">
+        <div class="metric-card">
+          <span class="metric-title">Resultados activos</span>
           <span class="metric-value">{{ filteredAceites().length }}</span>
-          <span class="metric-label">Aceites activos</span>
         </div>
-        <div class="metric">
+        <div class="metric-card">
+          <span class="metric-title">Consultas IA</span>
           <span class="metric-value">IA</span>
-          <span class="metric-label">Recomendaciones guiadas</span>
         </div>
       </div>
-    </section>
-
-    <section class="filters-card">
-      <ion-searchbar
-        placeholder="Buscar por nombre, beneficio o palabra clave"
-        (ionInput)="onSearchChange($event)"
-        debounce="200"
-      ></ion-searchbar>
-
-      <div class="filters">
-        <ion-chip
-          *ngFor="let category of categories"
-          [color]="selectedCategory() === category.value ? 'primary' : 'medium'"
-          (click)="applyCategory(category.value)"
-        >
-          <ion-icon name="leaf-outline"></ion-icon>
-          <ion-label>{{ category.label }}</ion-label>
-        </ion-chip>
-        <ion-button fill="clear" size="small" (click)="toggleAdvancedFilters()">
+    </div>
+    <div class="hero-aside">
+      <div class="hero-tip">
+        <h3>Tip inteligente</h3>
+        <p>
+          Combina filtros por emocion y uso. Asi tu asistente IA aprendera tus preferencias y priorizara nuevas
+          sugerencias.
+        </p>
+        <ion-button size="small" fill="outline" (click)="toggleAdvancedFilters()">
           <ion-icon slot="start" name="funnel-outline"></ion-icon>
-          Mas filtros
+          Ajustar filtros
         </ion-button>
       </div>
+    </div>
+  </section>
 
-      <div class="advanced" *ngIf="advancedFiltersVisible()">
-        <ion-item lines="none">
-          <ion-label position="stacked">Uso</ion-label>
-          <ion-input
-            placeholder="Difusor, masaje, inhalacion..."
-            (ionInput)="updateAdvancedFilter('uso', $event.detail.value)"
-          ></ion-input>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label position="stacked">Emocion o sensacion</ion-label>
-          <ion-input
-            placeholder="Ansiedad, foco, energia..."
-            (ionInput)="updateAdvancedFilter('emocion', $event.detail.value)"
-          ></ion-input>
-        </ion-item>
-      </div>
-    </section>
+  <section class="surface-section filters-card">
+    <ion-searchbar
+      placeholder="Buscar por nombre, beneficio o palabra clave"
+      (ionInput)="onSearchChange($event)"
+      debounce="200"
+    ></ion-searchbar>
 
+    <div class="filters">
+      <ion-chip
+        *ngFor="let category of categories"
+        [color]="selectedCategory() === category.value ? 'primary' : 'medium'"
+        (click)="applyCategory(category.value)"
+      >
+        <ion-icon name="leaf-outline"></ion-icon>
+        <ion-label>{{ category.label }}</ion-label>
+      </ion-chip>
+      <ion-button fill="clear" size="small" (click)="toggleAdvancedFilters()">
+        <ion-icon slot="start" name="funnel-outline"></ion-icon>
+        Mas filtros
+      </ion-button>
+    </div>
+
+    <div class="advanced" *ngIf="advancedFiltersVisible()">
+      <ion-item lines="none">
+        <ion-label position="stacked">Uso</ion-label>
+        <ion-input
+          placeholder="Difusor, masaje, inhalacion..."
+          (ionInput)="updateAdvancedFilter('uso', $event.detail.value)"
+        ></ion-input>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label position="stacked">Emocion o sensacion</ion-label>
+        <ion-input
+          placeholder="Ansiedad, foco, energia..."
+          (ionInput)="updateAdvancedFilter('emocion', $event.detail.value)"
+        ></ion-input>
+      </ion-item>
+    </div>
+  </section>
+
+  <section class="surface-section cards-wrapper">
     <div class="cards-grid">
       <ion-spinner name="crescent" *ngIf="isLoading()"></ion-spinner>
 
@@ -76,6 +92,8 @@
             <ion-img
               [src]="aceite.imagen_url || 'assets/img/aceite-placeholder.svg'"
               alt="Imagen de {{ aceite.nombre }}"
+              loading="lazy"
+              (ionImgDidError)="handleImageError($event)"
             ></ion-img>
             <div class="media-badge" *ngIf="aceite.emociones_relacionadas">
               <ion-icon name="leaf-outline"></ion-icon>
@@ -102,10 +120,16 @@
                 <ion-icon name="sparkles-outline"></ion-icon>
                 <span>{{ aceite.usos }}</span>
               </div>
-              <ion-button size="small" fill="outline" (click)="toggleFavorite(aceite)">
-                <ion-icon slot="start" [name]="aceite.isFavorite ? 'heart' : 'heart-outline'"></ion-icon>
-                {{ aceite.isFavorite ? 'Quitar' : 'Favorito' }}
-              </ion-button>
+              <div class="card-actions">
+                <ion-button size="small" color="success" [href]="getPurchaseLink(aceite)" target="_blank" rel="noopener">
+                  <ion-icon slot="start" name="logo-whatsapp"></ion-icon>
+                  Comprar
+                </ion-button>
+                <ion-button size="small" fill="outline" (click)="toggleFavorite(aceite)">
+                  <ion-icon slot="start" [name]="aceite.isFavorite ? 'heart' : 'heart-outline'"></ion-icon>
+                  {{ aceite.isFavorite ? 'Quitar' : 'Favorito' }}
+                </ion-button>
+              </div>
             </div>
           </ion-card-content>
         </ion-card>
@@ -113,9 +137,9 @@
         <div class="empty-state" *ngIf="!filteredAceites().length">
           <img src="assets/img/aceite-placeholder.svg" alt="Sin resultados" />
           <h3>Sin resultados por ahora</h3>
-          <p>Prueba ajustar los filtros o explorar otra categoría para encontrar el aceite ideal.</p>
+          <p>Prueba ajustar filtros o explorar otra categoria para encontrar el aceite ideal.</p>
         </div>
       </ng-container>
     </div>
-  </div>
+  </section>
 </ion-content>

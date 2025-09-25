@@ -1,58 +1,98 @@
-<ion-header>
-    <ion-toolbar color="primary">
-      <ion-title>Inicia sesion</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content fullscreen>
-    <div class="login-container">
-      <h1>Bienvenido a Alquimia Esencial</h1>
-      <p>Ingresa tus credenciales para continuar.</p>
+﻿<ion-content fullscreen class="auth-shell login-page">
+  <div class="login-wrapper">
+    <section class="login-hero surface-section">
+      <ion-chip color="secondary" class="hero-chip">
+        <ion-icon slot="start" name="sparkles-outline"></ion-icon>
+        <ion-label>Bienestar inteligente</ion-label>
+      </ion-chip>
+      <h1>Inicia tu ritual personalizado</h1>
+      <p>
+        Ingresa con tu cuenta y recibe recomendaciones dinamicas, seguimiento de favoritos y tips basados en tus
+        objetivos diarios.
+      </p>
+      <ul class="login-benefits">
+        <li>
+          <ion-icon name="leaf-outline"></ion-icon>
+          <span>Accede a mezclas curadas y guias de uso seguras.</span>
+        </li>
+        <li>
+          <ion-icon name="flash-outline"></ion-icon>
+          <span>Sincroniza tus rutinas con el asistente IA en cualquier dispositivo.</span>
+        </li>
+        <li>
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+          <span>Proteccion de datos y recomendaciones personalizadas.</span>
+        </li>
+      </ul>
+    </section>
 
-      <form [formGroup]="form" (ngSubmit)="submit()">
-        <ion-list lines="none">
-          <ion-item>
-            <ion-label position="floating">Nombre de usuario</ion-label>
+    <section class="login-form surface-section">
+      <header class="form-header">
+        <h2>Inicia sesion</h2>
+        <p>Completa tus credenciales para continuar.</p>
+      </header>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="form-fields">
+          <ion-item lines="none" class="input-item">
+            <ion-icon slot="start" name="person-outline"></ion-icon>
             <ion-input
               formControlName="username"
               type="text"
               autocomplete="username"
-              required
+              placeholder="Nombre de usuario"
+              [class.invalid]="usernameControl?.touched && usernameControl?.invalid"
             ></ion-input>
           </ion-item>
-          <ion-text color="danger" *ngIf="usernameControl?.touched && usernameControl?.invalid">
+          <ion-note color="danger" class="field-error" *ngIf="usernameControl?.touched && usernameControl?.invalid">
             El nombre de usuario es requerido
-          </ion-text>
+          </ion-note>
 
-          <ion-item>
-            <ion-label position="floating">Clave</ion-label>
+          <ion-item lines="none" class="input-item">
+            <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
             <ion-input
               formControlName="password"
-              type="password"
+              [type]="passwordFieldType"
               autocomplete="current-password"
-              required
+              placeholder="Clave de acceso"
+              [class.invalid]="passwordControl?.touched && passwordControl?.invalid"
             ></ion-input>
+            <ion-button
+              type="button"
+              fill="clear"
+              size="small"
+              class="toggle-password"
+              (click)="togglePasswordVisibility()"
+            >
+              <ion-icon [name]="passwordFieldType === 'password' ? 'eye-outline' : 'eye-off-outline'"></ion-icon>
+            </ion-button>
           </ion-item>
-          <ion-text color="danger" *ngIf="passwordControl?.touched && passwordControl?.invalid">
+          <ion-note color="danger" class="field-error" *ngIf="passwordControl?.touched && passwordControl?.invalid">
             La clave es obligatoria
-          </ion-text>
-        </ion-list>
+          </ion-note>
 
-        <ion-text color="danger" *ngIf="apiError" class="api-error">
-          {{ apiError }}
-        </ion-text>
+          <ion-note color="danger" class="field-error" *ngIf="apiError">
+            {{ apiError }}
+          </ion-note>
+        </div>
 
         <ion-button expand="block" type="submit" [disabled]="isSubmitting">
           <ng-container *ngIf="isSubmitting; else loginLabel">
             <ion-spinner name="crescent"></ion-spinner>
           </ng-container>
-          <ng-template #loginLabel>Iniciar sesion</ng-template>
+          <ng-template #loginLabel>Ingresar</ng-template>
         </ion-button>
       </form>
 
-      <div class="auth-links">
-        <a routerLink="/forgot-password">Olvidaste tu clave?</a>
-        <a routerLink="/register">Crear cuenta nueva</a>
-      </div>
-    </div>
-  </ion-content>
-
+      <footer class="form-footer">
+        <div class="footer-links">
+          <a routerLink="/forgot-password">Olvidaste tu clave?</a>
+          <a routerLink="/register">Crear una cuenta</a>
+        </div>
+        <p class="support-text">
+          ?Necesitas ayuda? Escribenos desde el asistente IA y recibe soporte guiado.
+        </p>
+      </footer>
+    </section>
+  </div>
+</ion-content>

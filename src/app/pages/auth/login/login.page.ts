@@ -1,27 +1,44 @@
-import { Component, inject } from '@angular/core';
+﻿import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   IonButton,
+  IonChip,
   IonContent,
+  IonIcon,
   IonInput,
   IonItem,
   IonLabel,
-  IonList,
-  IonText,
-  IonTitle,
-  IonToolbar,
-  IonHeader,  IonSpinner,
+  IonNote,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import { Router, RouterModule } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import {
+  eyeOffOutline,
+  eyeOutline,
+  flashOutline,
+  leafOutline,
+  lockClosedOutline,
+  personOutline,
+  shieldCheckmarkOutline,
+  sparklesOutline,
+} from 'ionicons/icons';
 import { take } from 'rxjs';
 
 import { AuthService } from '../../../core/services/auth.service';
+
+addIcons({
+  'person-outline': personOutline,
+  'lock-closed-outline': lockClosedOutline,
+  'eye-outline': eyeOutline,
+  'eye-off-outline': eyeOffOutline,
+  'leaf-outline': leafOutline,
+  'flash-outline': flashOutline,
+  'shield-checkmark-outline': shieldCheckmarkOutline,
+  'sparkles-outline': sparklesOutline,
+});
 
 @Component({
   selector: 'app-login',
@@ -30,16 +47,15 @@ import { AuthService } from '../../../core/services/auth.service';
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
     IonContent,
-    IonList,
     IonItem,
-    IonLabel,
     IonInput,
-    IonText,
-    IonButton,    IonSpinner,
+    IonButton,
+    IonIcon,
+    IonChip,
+    IonLabel,
+    IonNote,
+    IonSpinner,
   ],
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
@@ -57,6 +73,7 @@ export class LoginPage {
 
   isSubmitting = false;
   apiError: string | null = null;
+  passwordFieldType: 'password' | 'text' = 'password';
 
   get usernameControl() {
     return this.form.get('username');
@@ -64,6 +81,10 @@ export class LoginPage {
 
   get passwordControl() {
     return this.form.get('password');
+  }
+
+  togglePasswordVisibility(): void {
+    this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 
   async submit(): Promise<void> {
@@ -109,6 +130,3 @@ export class LoginPage {
     await toast.present();
   }
 }
-
-
-

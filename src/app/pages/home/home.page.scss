@@ -1,67 +1,251 @@
-ion-content {
-  --padding-top: 1rem;
-  --padding-start: 1rem;
-  --padding-end: 1rem;
-}
+﻿.home-page {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 2vw, 2.5rem);
 
-.hero {
-  background: linear-gradient(135deg, rgba(56, 128, 255, 0.15), rgba(88, 86, 214, 0.15));
-  border-radius: 16px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  text-align: left;
-
-  h2 {
-    margin: 0 0 0.5rem;
-    font-size: 1.5rem;
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(1.8rem, 2.5vw, 2.6rem);
+    align-items: start;
+    background: linear-gradient(145deg, rgba(99, 91, 255, 0.14) 0%, rgba(42, 198, 168, 0.1) 45%, rgba(255, 255, 255, 0.95) 100%);
+    position: relative;
+    overflow: hidden;
   }
 
-  p {
-    margin: 0 0 1rem;
-    color: var(--ion-color-medium);
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 10% 20%, rgba(99, 91, 255, 0.18) 0%, transparent 45%),
+      radial-gradient(circle at 85% 15%, rgba(42, 198, 168, 0.16) 0%, transparent 45%),
+      radial-gradient(circle at 45% 100%, rgba(255, 154, 101, 0.12) 0%, transparent 60%);
+    opacity: 0.7;
+    pointer-events: none;
   }
-}
 
-.quick-prompts,
-.shortcuts,
-.highlighted {
-  margin-bottom: 2rem;
-
-  h3 {
-    margin-bottom: 0.75rem;
-    font-size: 1.1rem;
-    font-weight: 600;
+  .hero-content,
+  .hero-panel {
+    position: relative;
+    z-index: 1;
   }
-}
 
-ion-chip {
-  margin-right: 0.5rem;
-  margin-bottom: 0.5rem;
-}
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
 
-.shortcut-card {
-  text-align: center;
-  padding: 1.5rem 1rem;
-  cursor: pointer;
+  .hero-eyebrow {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.8rem;
+    color: var(--ion-text-color-step-600);
+  }
 
-  ion-icon {
-    font-size: 1.8rem;
-    margin-bottom: 0.5rem;
+  h1 {
+    margin: 0;
+    font-size: clamp(2.1rem, 5vw, 2.8rem);
+    font-weight: 700;
+  }
+
+  .hero-subtitle {
+    margin: 0;
+    max-width: 32rem;
+    color: var(--ion-text-color-step-600);
+    line-height: 1.6;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .hero-metrics {
+    margin-top: 0.5rem;
+  }
+
+  .hero-panel {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .hero-panel-card {
+    width: 100%;
+    padding: clamp(1.6rem, 2.5vw, 2rem);
+    border-radius: var(--app-radius-lg);
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(120, 128, 206, 0.24);
+    box-shadow: 0 26px 70px -42px rgba(47, 58, 122, 0.35);
+    backdrop-filter: blur(var(--app-backdrop-blur));
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .hero-panel-card h3 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  .hero-panel-card p {
+    margin: 0;
+    color: var(--ion-text-color-step-600);
+  }
+
+  .panel-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .panel-chips ion-chip {
+    --background: rgba(99, 91, 255, 0.14);
+    font-size: 0.85rem;
+  }
+
+  .quick-prompts .prompt-scroller {
+    display: grid;
+    gap: 0.9rem;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(220px, 1fr);
+    overflow-x: auto;
+    padding-bottom: 0.4rem;
+    scroll-snap-type: x mandatory;
+  }
+
+  .prompt-card {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1.1rem 1.2rem;
+    border-radius: var(--app-radius-md);
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(120, 128, 206, 0.2);
+    box-shadow: 0 20px 40px -36px rgba(52, 63, 125, 0.32);
+    backdrop-filter: blur(var(--app-backdrop-blur));
+    cursor: pointer;
+    text-align: left;
+    scroll-snap-align: start;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .prompt-card ion-icon {
+    font-size: 1.4rem;
     color: var(--ion-color-primary);
   }
 
-  ion-card-title {
+  .prompt-card span {
+    font-weight: 600;
+    color: var(--ion-text-color);
+  }
+
+  .prompt-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 30px 70px -40px rgba(52, 63, 125, 0.4);
+  }
+
+  .shortcut-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .shortcut-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.2rem 1.4rem;
+    border-radius: var(--app-radius-md);
+    background: linear-gradient(135deg, rgba(99, 91, 255, 0.12), rgba(42, 198, 168, 0.12));
+    border: 1px solid rgba(120, 128, 206, 0.22);
+    box-shadow: 0 22px 58px -42px rgba(47, 58, 122, 0.32);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .shortcut-card ion-icon {
+    font-size: 1.6rem;
+    color: var(--ion-color-primary);
+  }
+
+  .shortcut-card strong {
+    display: block;
     font-size: 1rem;
+  }
+
+  .shortcut-card span {
+    font-size: 0.85rem;
+    color: var(--ion-text-color-step-600);
+  }
+
+  .shortcut-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 32px 80px -48px rgba(47, 58, 122, 0.38);
+  }
+
+  .highlighted-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .highlight-card {
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .highlight-card ion-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    flex: 1;
+  }
+
+  .highlight-card .card-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
   }
 }
 
-.highlighted ion-card {
-  margin-bottom: 1rem;
+@media (max-width: 960px) {
+  .home-page .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .home-page .hero-panel {
+    order: -1;
+  }
 }
 
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
+@media (max-width: 640px) {
+  .home-page .hero {
+    padding: 1.5rem;
+  }
+
+  .home-page .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .home-page .shortcut-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+body.dark .home-page .hero-panel-card,
+body.dark .home-page .prompt-card {
+  background: rgba(20, 25, 48, 0.9);
+  border-color: rgba(123, 132, 255, 0.22);
+  box-shadow: 0 32px 90px -48px rgba(4, 8, 35, 0.7);
+}
+
+body.dark .home-page .shortcut-card {
+  background: linear-gradient(135deg, rgba(143, 135, 255, 0.16), rgba(58, 219, 189, 0.12));
+  border-color: rgba(123, 132, 255, 0.28);
 }

@@ -1,35 +1,66 @@
-<ion-header>
-    <ion-toolbar color="primary">
-      <ion-title>Mis favoritos</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content fullscreen>
-    <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
-      <ion-refresher-content></ion-refresher-content>
-    </ion-refresher>
+﻿<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Mis favoritos</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-    <section class="favorites-list">
+<ion-content fullscreen class="app-shell favorites-page">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <section class="surface-section favorites-hero">
+    <div>
+      <h1>Tu coleccion personal</h1>
+      <p>Revisa tu biblioteca de aromas favoritos y mantente al dia con mezclas sugeridas por la IA.</p>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <span class="metric-title">Favoritos activos</span>
+        <span class="metric-value">{{ favoritos().length }}</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-title">Ultima actualizacion</span>
+        <span class="metric-value">{{ lastUpdated() }}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="surface-section favorites-list">
+    <div class="favorites-wrapper">
       <ion-spinner name="crescent" *ngIf="isLoading()"></ion-spinner>
 
       <ng-container *ngIf="!isLoading()">
-        <ion-card *ngFor="let aceite of favoritos()">
-          <ion-card-header>
-            <ion-card-title>{{ aceite.nombre }}</ion-card-title>
-            <ion-card-subtitle>{{ aceite.beneficios }}</ion-card-subtitle>
-          </ion-card-header>
-          <ion-card-content>
-            <p>{{ aceite.descripcion }}</p>
-            <ion-button fill="clear" size="small" color="danger" (click)="remove(aceite)">
-              <ion-icon slot="start" name="heart"></ion-icon>
-              Eliminar
-            </ion-button>
-          </ion-card-content>
-        </ion-card>
-
-        <ion-text color="medium" *ngIf="!favoritos().length">
-          Todavia no tienes favoritos. Explora aceites y agrega tus preferidos.
-        </ion-text>
+        <div class="favorites-grid" *ngIf="favoritos().length; else emptyState">
+          <ion-card *ngFor="let aceite of favoritos()">
+            <ion-card-header>
+              <ion-card-title>{{ aceite.nombre }}</ion-card-title>
+              <ion-card-subtitle>{{ aceite.beneficios }}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <p>{{ aceite.descripcion }}</p>
+              <div class="card-actions">
+                <ion-button fill="outline" color="danger" size="small" (click)="remove(aceite)">
+                  <ion-icon slot="start" name="heart"></ion-icon>
+                  Eliminar
+                </ion-button>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </div>
       </ng-container>
-    </section>
-  </ion-content>
+    </div>
+  </section>
 
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <img src="assets/img/aceite-placeholder.svg" alt="Sin favoritos" />
+      <h3>Aun no guardas aceites</h3>
+      <p>Explora la coleccion y agrega tus favoritos para tenerlos siempre listos.</p>
+      <ion-button color="primary" (click)="goToAceites()">
+        <ion-icon slot="start" name="leaf-outline"></ion-icon>
+        Explorar aceites
+      </ion-button>
+    </div>
+  </ng-template>
+</ion-content>

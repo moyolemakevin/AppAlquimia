@@ -1,33 +1,65 @@
 ﻿<ion-app>
-  <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" class="app-menu">
-      <ion-header>
+  <ion-split-pane contentId="main-content" when="lg" class="layout-shell">
+    <ion-menu contentId="main-content" class="app-menu" type="overlay">
+      <ion-header translucent>
         <ion-toolbar>
           <div class="brand">
-            <img src="assets/img/logo-alquimia.svg" alt="Logo de Alquimia Esencial" />
-            <div class="brand-text">
+            <div class="brand-mark">
+              <img src="assets/img/logo-alquimia.svg" alt="Logo de Alquimia Esencial" />
+            </div>
+            <div class="brand-copy">
               <span class="brand-name">Alquimia</span>
-              <span class="brand-tagline">Esencial</span>
+              <span class="brand-tagline">Bienestar guiado</span>
             </div>
           </div>
+          <ion-badge color="light" class="brand-pill">v2 experiencia</ion-badge>
         </ion-toolbar>
       </ion-header>
-      <ion-content class="menu-content">
-        <div class="user-summary" *ngIf="user() as currentUser">
-          <h2>{{ greeting() }}</h2>
-          <p>{{ currentUser.role === 'admin' ? 'Administrador' : 'Usuario' }}</p>
-          <small>{{ currentUser.email }}</small>
+      <ion-content class="menu-content" force-overscroll="false">
+        <div class="menu-scroll">
+          <section class="user-card" *ngIf="user() as currentUser">
+            <div class="user-avatar">
+              <span>{{ userInitials() }}</span>
+            </div>
+            <div class="user-data">
+              <p class="user-greeting">{{ greeting() }}</p>
+              <p class="user-email">{{ currentUser.email }}</p>
+              <ion-chip color="light" class="user-role">
+                <ion-icon name="shield-checkmark-outline"></ion-icon>
+                <ion-label>{{ roleLabel() }}</ion-label>
+              </ion-chip>
+            </div>
+          </section>
+
+          <section class="menu-intro">
+            <h2>Simplificamos tus rituales</h2>
+            <p>Explora aceites, recibe consejos personalizados y deja que la IA te acompane en cada etapa.</p>
+          </section>
+
+          <ion-list lines="none" class="menu-list">
+            <ng-container *ngFor="let item of menuItems">
+              <ion-menu-toggle auto-hide="false" *ngIf="canDisplay(item)">
+                <ion-item
+                  class="menu-item"
+                  button
+                  detail="false"
+                  [class.menu-item--active]="isActive(item.route)"
+                  (click)="handleMenuItem(item)"
+                >
+                  <ion-icon [name]="item.icon" slot="start"></ion-icon>
+                  <ion-label>{{ item.label }}</ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+            </ng-container>
+          </ion-list>
+
+          <section class="menu-footer">
+            <p>
+              Necesitas ideas nuevas? Consulta el asistente IA y descubre mezclas respaldadas por datos reales
+              de tu biblioteca.
+            </p>
+          </section>
         </div>
-        <ion-list lines="none">
-          <ng-container *ngFor="let item of menuItems">
-            <ion-menu-toggle auto-hide="false" *ngIf="canDisplay(item)">
-              <ion-item class="menu-item" button detail="false" (click)="handleMenuItem(item)">
-                <ion-icon [name]="item.icon" slot="start"></ion-icon>
-                <ion-label>{{ item.label }}</ion-label>
-              </ion-item>
-            </ion-menu-toggle>
-          </ng-container>
-        </ion-list>
       </ion-content>
     </ion-menu>
 

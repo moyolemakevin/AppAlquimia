@@ -1,41 +1,177 @@
-.login-container {
-  padding: 2rem 1.5rem;
-  max-width: 420px;
-  margin: 0 auto;
-  text-align: center;
+﻿.login-page {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
 
-  h1 {
+  .login-wrapper {
+    width: min(1024px, 100%);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 480px);
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .login-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    background: linear-gradient(145deg, rgba(99, 91, 255, 0.14), rgba(42, 198, 168, 0.12));
+  }
+
+  .hero-chip {
+    align-self: flex-start;
+  }
+
+  .login-hero h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 2.4rem);
+  }
+
+  .login-hero p {
+    margin: 0;
+    color: var(--ion-text-color-step-600);
+    line-height: 1.6;
+  }
+
+  .login-benefits {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .login-benefits li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    font-size: 0.95rem;
+    color: var(--ion-text-color-step-600);
+    line-height: 1.5;
+  }
+
+  .login-benefits ion-icon {
+    font-size: 1.4rem;
+    color: var(--ion-color-primary);
+    margin-top: 0.1rem;
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: clamp(1.8rem, 3vw, 2.2rem);
+  }
+
+  .form-header h2 {
+    margin: 0 0 0.35rem;
     font-size: 1.6rem;
-    margin-bottom: 0.5rem;
   }
 
-  p {
-    color: var(--ion-color-medium);
-    margin-bottom: 2rem;
+  .form-header p {
+    margin: 0;
+    color: var(--ion-text-color-step-600);
   }
 
-  ion-list {
-    margin-bottom: 1rem;
+  .form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .input-item {
+    --background: rgba(255, 255, 255, 0.85);
+    --inner-padding-end: 0.5rem;
+    border-radius: var(--app-radius-md);
+    border: 1px solid rgba(120, 128, 206, 0.2);
+    box-shadow: inset 0 0 0 1px rgba(120, 128, 206, 0.12);
+  }
+
+  .input-item ion-input {
+    --padding-start: 0;
+  }
+
+  .input-item ion-input.invalid {
+    --color: var(--ion-color-danger);
+  }
+
+  .input-item ion-icon[slot="start"] {
+    color: var(--ion-color-primary);
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+  }
+
+  .toggle-password {
+    --padding-start: 0.4rem;
+    --padding-end: 0.4rem;
+    --padding-top: 0.3rem;
+    --padding-bottom: 0.3rem;
+    color: var(--ion-text-color-step-600);
+  }
+
+  .field-error {
+    margin-left: 0.4rem;
+    font-size: 0.8rem;
   }
 
   ion-button {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
   }
-}
 
-.auth-links {
-  margin-top: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  .form-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+  }
 
-  a {
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-links a {
     color: var(--ion-color-primary);
     text-decoration: none;
+    font-weight: 600;
+  }
+
+  .support-text {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--ion-text-color-step-600);
   }
 }
 
-.api-error {
-  display: block;
-  margin: 0.5rem 0;
+@media (max-width: 900px) {
+  .login-page .login-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .login-page .login-hero {
+    order: 2;
+  }
+
+  .login-page .login-form {
+    order: 1;
+  }
+}
+
+@media (max-width: 560px) {
+  .login-page {
+    padding: clamp(1rem, 6vw, 1.6rem);
+  }
+}
+
+body.dark .login-page .input-item {
+  --background: rgba(20, 25, 48, 0.92);
+  border-color: rgba(123, 132, 255, 0.26);
+  box-shadow: inset 0 0 0 1px rgba(123, 132, 255, 0.18);
+}
+
+body.dark .login-page .login-hero {
+  background: linear-gradient(145deg, rgba(143, 135, 255, 0.18), rgba(58, 219, 189, 0.14));
 }

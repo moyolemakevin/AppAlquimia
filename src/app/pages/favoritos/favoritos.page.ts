@@ -13,19 +13,20 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonSpinner,
-  IonText,
+  
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
+import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { heart, heartOutline } from 'ionicons/icons';
+import { heart, heartOutline, leafOutline } from 'ionicons/icons';
 import { take } from 'rxjs';
 
 import { FavoritesService } from '../../core/services/favorites.service';
 import { Aceite } from '../../core/models';
 
-addIcons({ heart: heart, 'heart-outline': heartOutline });
+addIcons({ heart: heart, 'heart-outline': heartOutline, 'leaf-outline': leafOutline });
 
 @Component({
   selector: 'app-favoritos',
@@ -45,7 +46,7 @@ addIcons({ heart: heart, 'heart-outline': heartOutline });
     IonCardContent,
     IonButton,
     IonIcon,
-    IonText,
+    
     IonSpinner,
   ],
   templateUrl: './favoritos.page.html',
@@ -54,9 +55,11 @@ addIcons({ heart: heart, 'heart-outline': heartOutline });
 export class FavoritosPage implements OnInit {
   private readonly favoritesService = inject(FavoritesService);
   private readonly toastController = inject(ToastController);
+  private readonly router = inject(Router);
 
   favoritos = signal<Aceite[]>([]);
   isLoading = signal<boolean>(false);
+  private readonly lastSync = signal<string>('Reciente');
 
   ngOnInit(): void {
     this.loadFavorites();
@@ -78,11 +81,20 @@ export class FavoritosPage implements OnInit {
         next: async () => {
           this.favoritos.update((items) => items.filter((item) => item.id !== aceite.id));
           await this.presentToast('Aceite eliminado de favoritos', 'medium');
+          this.touchSync();
         },
         error: async () => {
           await this.presentToast('No pudimos actualizar tus favoritos', 'danger');
         },
       });
+  }
+
+  goToAceites(): void {
+    this.router.navigateByUrl('/app/aceites');
+  }
+
+  lastUpdated(): string {
+    return this.lastSync();
   }
 
   private loadFavorites(onComplete?: () => void): void {
@@ -94,6 +106,7 @@ export class FavoritosPage implements OnInit {
         next: (items) => {
           this.favoritos.set(items as Aceite[]);
           this.isLoading.set(false);
+          this.touchSync();
           onComplete?.();
         },
         error: () => {
@@ -101,6 +114,12 @@ export class FavoritosPage implements OnInit {
           onComplete?.();
         },
       });
+  }
+
+  private touchSync(): void {
+    const now = new Date();
+    const formatted = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    this.lastSync.set(formatted);
   }
 
   private async presentToast(message: string, color: 'primary' | 'medium' | 'danger' = 'primary'): Promise<void> {
@@ -113,5 +132,3 @@ export class FavoritosPage implements OnInit {
     await toast.present();
   }
 }
-
-

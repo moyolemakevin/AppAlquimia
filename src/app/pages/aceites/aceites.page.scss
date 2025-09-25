@@ -1,300 +1,243 @@
-﻿:host {
-  ion-toolbar {
-    --background: transparent;
-    --color: #37255f;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-  }
-
-  .aceites-content {
-    --background: linear-gradient(180deg, #f4f0ff 0%, #ffffff 40%);
-  }
-
-  .aceites-wrapper {
-    padding: 1.5rem clamp(1rem, 4vw, 2rem) 3rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.75rem;
-  }
+﻿.aceites-page {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 2vw, 2.5rem);
 
   .hero {
-    background: linear-gradient(135deg, rgba(95, 75, 139, 0.16) 0%, rgba(143, 107, 253, 0.12) 100%);
-    border-radius: 28px;
-    padding: clamp(1.8rem, 4vw, 2.6rem);
-    box-shadow: 0 25px 60px rgba(88, 63, 140, 0.12);
-    color: #3f2b68;
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 3vw, 2.8rem);
+    background: linear-gradient(130deg, rgba(99, 91, 255, 0.16), rgba(42, 198, 168, 0.12));
+  }
 
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: 999px;
-      padding: 0.35rem 0.9rem;
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #7153c7;
+  .hero-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
 
-      ion-icon {
-        font-size: 1rem;
-      }
-    }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--app-radius-pill);
+    background: rgba(99, 91, 255, 0.14);
+    border: 1px solid rgba(99, 91, 255, 0.26);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: var(--ion-color-primary);
+  }
 
-    h1 {
-      margin: 1rem 0 0.6rem;
-      font-size: clamp(1.65rem, 5vw, 2.2rem);
-      font-weight: 700;
-    }
+  .hero-intro h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 2.6rem);
+    font-weight: 700;
+  }
 
-    p {
-      margin: 0;
-      max-width: 540px;
-      color: rgba(54, 41, 92, 0.76);
-      line-height: 1.6;
-    }
+  .hero-intro p {
+    margin: 0;
+    max-width: 42ch;
+    line-height: 1.6;
+    color: var(--ion-text-color-step-600);
+  }
 
-    .hero-metrics {
-      display: flex;
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-      flex-wrap: wrap;
+  .hero-aside {
+    display: flex;
+    align-items: stretch;
+  }
 
-      .metric {
-        min-width: 140px;
-        background: rgba(255, 255, 255, 0.66);
-        border-radius: 18px;
-        padding: 0.85rem 1.1rem;
-        box-shadow: 0 12px 32px rgba(88, 63, 140, 0.08);
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
+  .hero-tip {
+    padding: clamp(1.6rem, 2.5vw, 2rem);
+    border-radius: var(--app-radius-lg);
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(120, 128, 206, 0.24);
+    box-shadow: 0 24px 60px -42px rgba(47, 58, 122, 0.35);
+    backdrop-filter: blur(var(--app-backdrop-blur));
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
 
-        .metric-value {
-          font-size: 1.4rem;
-          font-weight: 700;
-          color: #5f4b8b;
-        }
+  .hero-tip h3 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
 
-        .metric-label {
-          font-size: 0.8rem;
-          text-transform: uppercase;
-          letter-spacing: 0.14em;
-          color: rgba(63, 42, 101, 0.65);
-        }
-      }
-    }
+  .hero-tip p {
+    margin: 0;
+    color: var(--ion-text-color-step-600);
+    line-height: 1.5;
   }
 
   .filters-card {
-    background: #ffffff;
-    border-radius: 24px;
-    padding: clamp(1.2rem, 3vw, 1.8rem);
-    box-shadow: 0 20px 45px rgba(74, 52, 120, 0.12);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    display: grid;
+    gap: 1.4rem;
+  }
 
-    ion-searchbar {
-      --box-shadow: none;
-      --background: rgba(143, 107, 253, 0.08);
-      --border-radius: 16px;
-      --color: #352358;
-    }
+  ion-searchbar {
+    --box-shadow: inset 0 0 0 1px rgba(99, 91, 255, 0.22);
   }
 
   .filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.6rem;
+    gap: 0.65rem;
     align-items: center;
+  }
 
-    ion-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      background: rgba(95, 75, 139, 0.12);
-      color: #5f4b8b;
-      font-weight: 500;
+  .filters ion-chip {
+    --background: rgba(99, 91, 255, 0.12);
+    font-weight: 500;
+  }
 
-      ion-icon {
-        font-size: 1rem;
-      }
-    }
+  .filters ion-chip[color="primary"] {
+    --background: linear-gradient(120deg, rgba(99, 91, 255, 0.35), rgba(42, 198, 168, 0.26));
+    color: #fff;
+  }
+
+  .advanced {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: var(--app-radius-md);
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(120, 128, 206, 0.2);
   }
 
   .advanced ion-item {
-    --inner-padding-start: 0;
-    --inner-padding-end: 0;
-    --background: rgba(95, 75, 139, 0.05);
-    border-radius: 16px;
-    margin-bottom: 0.6rem;
-    padding: 0.6rem 0.8rem;
+    --background: rgba(248, 249, 255, 0.7);
+    --padding-start: 0.75rem;
+    --inner-padding-end: 0.75rem;
+    border: 1px solid rgba(99, 91, 255, 0.14);
+    border-radius: var(--app-radius-md);
+  }
 
-    ion-label {
-      color: #5f4b8b;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-    }
+  .cards-wrapper {
+    padding: clamp(1.2rem, 2vw, 2.2rem);
   }
 
   .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.4rem;
-    position: relative;
+  }
 
-    ion-spinner {
-      grid-column: 1 / -1;
-      margin: 2.5rem auto;
-    }
+  ion-spinner {
+    justify-self: center;
   }
 
   .aceite-card {
-    --background: #ffffff;
-    border-radius: 26px;
-    overflow: hidden;
-    box-shadow: 0 22px 50px rgba(78, 52, 130, 0.16);
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
-
-    ion-card-header {
-      padding: 1.4rem 1.6rem 0.8rem;
-
-      ion-card-subtitle {
-        color: rgba(94, 72, 140, 0.75);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-      }
-
-      ion-card-title {
-        font-size: 1.35rem;
-        color: #3e2964;
-        font-weight: 700;
-      }
-    }
-
-    ion-card-content {
-      padding: 0 1.6rem 1.6rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.95rem;
-
-      p {
-        margin: 0;
-        color: rgba(32, 24, 51, 0.78);
-        line-height: 1.6;
-      }
-    }
   }
 
   .card-media {
     position: relative;
-    height: 190px;
+    border-radius: var(--app-radius-md);
+    overflow: hidden;
+    margin: 1.2rem;
+    box-shadow: inset 0 0 0 1px rgba(120, 128, 206, 0.18);
+  }
 
-    ion-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+  .card-media ion-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+  }
 
-    .media-badge {
-      position: absolute;
-      bottom: 12px;
-      left: 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      background: rgba(255, 255, 255, 0.88);
-      border-radius: 999px;
-      padding: 0.3rem 0.75rem;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: #544083;
+  .media-badge {
+    position: absolute;
+    bottom: 0.9rem;
+    left: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--app-radius-pill);
+    background: rgba(99, 91, 255, 0.85);
+    color: #fff;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
 
-      ion-icon {
-        color: #7a5bca;
-      }
-    }
+  ion-card-header {
+    padding-top: 0;
+  }
+
+  ion-card-subtitle {
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.75rem;
+    color: var(--ion-color-primary);
+  }
+
+  ion-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+  }
+
+  ion-card-content p {
+    margin: 0;
+    color: var(--ion-text-color-step-600);
+    line-height: 1.55;
   }
 
   .benefits-chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
-
-    ion-chip {
-      background: rgba(143, 107, 253, 0.12);
-      color: #573f99;
-      font-weight: 500;
-    }
+    gap: 0.5rem;
   }
 
   .card-footer {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.6rem;
     flex-wrap: wrap;
-
-    .card-note {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      color: rgba(46, 31, 78, 0.78);
-      font-weight: 500;
-
-      ion-icon {
-        color: #7a5bca;
-      }
-    }
-
-    ion-button {
-      --border-radius: 999px;
-      --border-color: rgba(95, 75, 139, 0.35);
-      --color: #5f4b8b;
-    }
+    gap: 1rem;
+    align-items: flex-start;
+    justify-content: space-between;
   }
 
-  .empty-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 2.5rem;
-    background: rgba(95, 75, 139, 0.06);
-    border-radius: 28px;
-    color: #4a346f;
-
-    img {
-      width: 180px;
-      margin-bottom: 1.2rem;
-    }
-
-    h3 {
-      margin: 0 0 0.4rem;
-      font-weight: 700;
-    }
-
-    p {
-      margin: 0;
-      color: rgba(63, 43, 100, 0.7);
-      line-height: 1.5;
-    }
+  .card-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-left: auto;
   }
 
-  @media (max-width: 620px) {
-    .hero {
-      padding: 1.5rem;
-    }
-
-    .hero-metrics {
-      gap: 1rem;
-    }
-
-    .filters-card {
-      padding: 1.2rem;
-    }
+  .card-note {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--ion-text-color-step-600);
   }
+}
+
+@media (max-width: 1024px) {
+  .aceites-page .hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .aceites-page .cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+body.dark .aceites-page .hero-tip,
+body.dark .aceites-page .advanced,
+body.dark .aceites-page .media-badge {
+  background: rgba(20, 25, 48, 0.9);
+  border-color: rgba(123, 132, 255, 0.28);
+}
+
+body.dark .aceites-page .media-badge {
+  background: rgba(143, 135, 255, 0.85);
 }

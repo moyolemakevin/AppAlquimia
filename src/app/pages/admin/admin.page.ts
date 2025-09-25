@@ -5,20 +5,13 @@ import {
   IonAccordion,
   IonAccordionGroup,
   IonButton,
-  IonCard,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
   IonContent,
-  IonGrid,
   IonHeader,
   IonIcon,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
-  IonRow,
-  IonCol,
   IonSegment,
   IonSegmentButton,
   IonSelect,
@@ -56,13 +49,6 @@ addIcons({ 'analytics-outline': analyticsOutline, 'construct-outline': construct
     IonToolbar,
     IonTitle,
     IonContent,
-    IonGrid,
-    IonRow,
-    IonCol,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardSubtitle,
     IonButton,
     IonIcon,
     IonAccordionGroup,
@@ -100,6 +86,7 @@ export class AdminPage implements OnInit {
   readonly aceiteForm = this.fb.group({
     id: [null as number | null],
     nombre: ['', Validators.required],
+    imagen_url: [''],
     descripcion: [''],
     beneficios: ['', Validators.required],
     usos: [''],
@@ -129,6 +116,7 @@ export class AdminPage implements OnInit {
     this.aceiteForm.patchValue({
       id: aceite.id,
       nombre: aceite.nombre,
+      imagen_url: aceite.imagen_url ?? '',
       descripcion: aceite.descripcion ?? '',
       beneficios: aceite.beneficios ?? '',
       usos: aceite.usos ?? '',
@@ -138,7 +126,7 @@ export class AdminPage implements OnInit {
   }
 
   resetAceiteForm(): void {
-    this.aceiteForm.reset({ id: null, nombre: '', descripcion: '', beneficios: '', usos: '', precauciones: '', emociones_relacionadas: '' });
+    this.aceiteForm.reset({ id: null, nombre: '', imagen_url: '', descripcion: '', beneficios: '', usos: '', precauciones: '', emociones_relacionadas: '' });
   }
 
   submitAceite(): void {
@@ -150,6 +138,7 @@ export class AdminPage implements OnInit {
     const value = this.aceiteForm.getRawValue();
     const payload: Partial<Aceite> = {
       nombre: value.nombre ?? '',
+      imagen_url: value.imagen_url?.trim() || undefined,
       descripcion: value.descripcion ?? '',
       beneficios: value.beneficios ?? '',
       usos: value.usos ?? '',

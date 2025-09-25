@@ -1,40 +1,72 @@
-<ion-header>
-    <ion-toolbar color="primary">
-      <ion-title>Mi perfil</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content fullscreen>
-    <ion-card *ngIf="profile() as user">
-      <ion-card-header>
-        <ion-card-title>{{ user.name || user.username }}</ion-card-title>
-        <ion-card-subtitle>{{ user.email }}</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        <p><strong>Telefono:</strong> {{ user.phone || 'No registrado' }}</p>
-        <p><strong>Rol:</strong> {{ user.role }}</p>
-        <p><strong>Nivel:</strong> {{ user.level || 'Novato' }}</p>
-        <p><strong>Registrado:</strong> {{ user.registeredAt | date: 'mediumDate' }}</p>
+﻿<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Mi perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-        <ion-button expand="block" (click)="editProfile()">
-          Editar perfil
-        </ion-button>
-      </ion-card-content>
-    </ion-card>
+<ion-content fullscreen class="app-shell profile-page">
+  <section class="surface-section profile-hero" *ngIf="profile() as user">
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <span>{{ initials }}</span>
+      </div>
+      <div class="profile-details">
+        <h1>{{ user.name || user.username }}</h1>
+        <p>{{ user.email }}</p>
+        <div class="profile-tags">
+          <ion-chip color="light">
+            <ion-icon name="shield-checkmark-outline"></ion-icon>
+            <ion-label>{{ roleLabel }}</ion-label>
+          </ion-chip>
+          <ion-chip color="secondary">
+            <ion-icon name="sparkles-outline"></ion-icon>
+            <ion-label>{{ user.level || 'Novato' }}</ion-label>
+          </ion-chip>
+        </div>
+      </div>
+    </div>
+    <div class="profile-meta">
+      <div>
+        <span class="meta-title">Telefono</span>
+        <span class="meta-value">{{ user.phone || 'No registrado' }}</span>
+      </div>
+      <div>
+        <span class="meta-title">Miembro desde</span>
+        <span class="meta-value">{{ memberSince }}</span>
+      </div>
+      <div>
+        <span class="meta-title">Ultimo acceso</span>
+        <span class="meta-value">{{ lastAccess }}</span>
+      </div>
+    </div>
+    <div class="profile-actions">
+      <ion-button color="primary" (click)="editProfile()">
+        Editar perfil
+      </ion-button>
+    </div>
+  </section>
 
-    <ion-card *ngIf="stats() as data">
-      <ion-card-header>
-        <ion-card-title>Actividad reciente</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p><strong>Aceites explorados:</strong> {{ data.total_aceites_explorados || 0 }}</p>
-        <p><strong>Favoritos:</strong> {{ data.favoritos_total || 0 }}</p>
-        <p><strong>Tips recibidos:</strong> {{ data.tips_recibidos || 0 }}</p>
-        <p><strong>Ultimo acceso:</strong> {{ data.ultimo_login ? (data.ultimo_login | date: 'short') : 'Sin registro' }}</p>
-      </ion-card-content>
-    </ion-card>
+  <section class="surface-section profile-stats" *ngIf="stats() as data">
+    <div class="section-header">
+      <h3>Actividad reciente</h3>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Aceites explorados</span>
+        <span class="stat-value">{{ data.total_aceites_explorados || 0 }}</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Favoritos</span>
+        <span class="stat-value">{{ data.favoritos_total || 0 }}</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Tips recibidos</span>
+        <span class="stat-value">{{ data.tips_recibidos || 0 }}</span>
+      </div>
+    </div>
+  </section>
 
-    <ion-text color="medium" *ngIf="!profile() && !isLoading()">
-      No pudimos cargar tu informacion de perfil.
-    </ion-text>
-  </ion-content>
-
+  <ion-text color="medium" *ngIf="!profile() && !isLoading()" class="profile-empty">
+    No pudimos cargar tu informacion de perfil.
+  </ion-text>
+</ion-content>

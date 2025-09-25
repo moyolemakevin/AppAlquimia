@@ -1,4 +1,4 @@
-﻿import { Component, OnDestroy, OnInit, ViewChild, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonAvatar,
@@ -10,8 +10,7 @@ import {
   IonInput,
   IonItem,
   IonLabel,
-  IonList,
-  IonText,
+  
   IonTitle,
   IonToolbar,
   IonChip,
@@ -60,10 +59,9 @@ interface QuickPrompt {
     IonToolbar,
     IonTitle,
     IonContent,
-    IonList,
     IonItem,
     IonLabel,
-    IonText,
+    
     IonFooter,
     IonInput,
     IonButton,

@@ -1,25 +1,33 @@
-<ion-header>
-    <ion-toolbar color="primary">
-      <ion-title>Tips y consejos</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content fullscreen>
+﻿<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Tips y consejos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen class="app-shell tips-page">
+  <section class="surface-section tips-hero">
+    <div>
+      <h1>Aprende, aplica y comparte</h1>
+      <p>Descubre rutinas guiadas por expertos y filtra por categoria para personalizar tu experiencia.</p>
+    </div>
     <ion-searchbar placeholder="Buscar tips" debounce="200" (ionInput)="onSearchChange($event)"></ion-searchbar>
+  </section>
 
-    <section class="filters">
-      <ion-chip
-        *ngFor="let type of types"
-        [color]="selectedType() === type.value ? 'primary' : 'medium'"
-        (click)="applyType(type.value)"
-      >
-        <ion-label>{{ type.label }}</ion-label>
-      </ion-chip>
-    </section>
+  <section class="surface-section filters">
+    <ion-chip
+      *ngFor="let type of types"
+      [color]="selectedType() === type.value ? 'primary' : 'medium'"
+      (click)="applyType(type.value)"
+    >
+      <ion-label>{{ type.label }}</ion-label>
+    </ion-chip>
+  </section>
 
-    <section class="tips-list">
-      <ion-spinner name="crescent" *ngIf="isLoading()"></ion-spinner>
+  <section class="surface-section tips-list">
+    <ion-spinner name="crescent" *ngIf="isLoading()"></ion-spinner>
 
-      <ng-container *ngIf="!isLoading()">
+    <ng-container *ngIf="!isLoading()">
+      <div class="tips-grid" *ngIf="filteredTips().length; else emptyTips">
         <ion-card *ngFor="let tip of filteredTips()">
           <ion-card-header>
             <ion-card-title>{{ tip.titulo }}</ion-card-title>
@@ -29,11 +37,15 @@
             <p>{{ tip.contenido }}</p>
           </ion-card-content>
         </ion-card>
+      </div>
+    </ng-container>
+  </section>
 
-        <ion-text color="medium" *ngIf="!filteredTips().length">
-          No hay consejos disponibles. Vuelve mas tarde.
-        </ion-text>
-      </ng-container>
-    </section>
-  </ion-content>
-
+  <ng-template #emptyTips>
+    <div class="empty-state">
+      <img src="assets/img/aceite-placeholder.svg" alt="Sin tips" />
+      <h3>Sin consejos disponibles</h3>
+      <p>Vuelve mas tarde o ajusta tus filtros para descubrir nuevas ideas.</p>
+    </div>
+  </ng-template>
+</ion-content>

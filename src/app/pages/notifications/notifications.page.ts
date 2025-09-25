@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+﻿import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonButton,
@@ -51,6 +51,7 @@ export class NotificationsPage implements OnInit {
 
   notifications = signal<NotificationItem[]>([]);
   isLoading = signal<boolean>(false);
+  readonly unreadCount = computed(() => this.notifications().filter((item) => !item.leida).length);
 
   ngOnInit(): void {
     this.loadNotifications();

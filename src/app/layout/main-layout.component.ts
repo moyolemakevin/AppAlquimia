@@ -1,7 +1,10 @@
-import { Component, computed, inject } from '@angular/core';
+﻿import { Component, computed, inject } from '@angular/core';
+import { addIcons } from 'ionicons';
 import { CommonModule } from '@angular/common';
 import {
   IonApp,
+  IonBadge,
+  IonChip,
   IonContent,
   IonHeader,
   IonIcon,
@@ -12,13 +15,27 @@ import {
   IonMenuToggle,
   IonRouterOutlet,
   IonSplitPane,
-  IonTitle,
+  
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { Router, RouterModule } from '@angular/router';
+import { bookOutline, chatbubbleEllipsesOutline, createOutline, heartOutline, homeOutline, leafOutline, logOutOutline, notificationsOutline, personOutline, settingsOutline } from 'ionicons/icons';
 
 import { AuthService } from '../core/services/auth.service';
 import { getTimeGreeting } from '../core/utils/time.utils';
+
+addIcons({
+  'home-outline': homeOutline,
+  'leaf-outline': leafOutline,
+  'chatbubble-ellipses-outline': chatbubbleEllipsesOutline,
+  'heart-outline': heartOutline,
+  'book-outline': bookOutline,
+  'notifications-outline': notificationsOutline,
+  'settings-outline': settingsOutline,
+  'person-outline': personOutline,
+  'create-outline': createOutline,
+  'log-out-outline': logOutOutline,
+});
 
 interface MenuItem {
   label: string;
@@ -39,12 +56,14 @@ interface MenuItem {
     IonMenu,
     IonHeader,
     IonToolbar,
-    IonTitle,
+    
     IonContent,
     IonList,
     IonItem,
     IonLabel,
     IonIcon,
+    IonChip,
+    IonBadge,
     IonMenuToggle,
     IonRouterOutlet,
   ],
@@ -61,6 +80,24 @@ export class MainLayoutComponent {
     const name = current?.name && current.name.trim() !== '' ? current.name : current?.username ?? 'Usuario';
     return `${getTimeGreeting()} ${name}`;
   });
+
+  readonly userInitials = computed(() => {
+    const current = this.user();
+    if (!current) {
+      return 'AE';
+    }
+
+    const base = (current.name && current.name.trim() !== '' ? current.name : current.username ?? 'Alquimia Esencial')
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part.charAt(0).toUpperCase())
+      .join('');
+
+    return base || 'AE';
+  });
+
+  readonly roleLabel = computed(() => (this.user()?.role === 'admin' ? 'Administrador' : 'Miembro'));
 
   readonly menuItems: MenuItem[] = [
     { label: 'Inicio', icon: 'home-outline', route: '/app/home' },
@@ -94,4 +131,14 @@ export class MainLayoutComponent {
 
     return this.authService.currentUser?.role === 'admin';
   }
+
+  isActive(route?: string | null): boolean {
+    if (!route) {
+      return false;
+    }
+
+    return this.router.url.startsWith(route);
+  }
 }
+
+

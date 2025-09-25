@@ -1,71 +1,124 @@
-<ion-header>
-    <ion-toolbar color="primary">
-      <ion-title>Inicio</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content fullscreen>
-    <section class="hero" *ngIf="user() as currentUser">
-      <h2>{{ greeting() }}</h2>
-      <p>Descubre los beneficios de los aceites esenciales y deja que la IA te guie en tu camino de bienestar.</p>
-      <ion-button color="secondary" (click)="openAssistant()">
-        <ion-icon slot="start" name="chatbubble-ellipses-outline"></ion-icon>
-        Abrir chat
-      </ion-button>
-    </section>
+﻿<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Resumen</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-    <section class="quick-prompts">
-      <h3>Preguntas rapidas al asistente</h3>
-      <ion-chip *ngFor="let prompt of quickPrompts" (click)="openAssistant(prompt.query)">
-        <ion-icon [name]="prompt.icon"></ion-icon>
-        <ion-label>{{ prompt.label }}</ion-label>
-      </ion-chip>
-    </section>
-
-    <section class="shortcuts">
-      <h3>Atajos</h3>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="6" sizeMd="4" *ngFor="let shortcut of shortcuts">
-            <ion-card class="shortcut-card" (click)="navigateTo(shortcut.route)">
-              <ion-card-content>
-                <ion-icon [name]="shortcut.icon"></ion-icon>
-                <ion-card-title>{{ shortcut.label }}</ion-card-title>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </section>
-
-    <section class="highlighted">
-      <div class="section-header">
-        <h3>Aceites destacados</h3>
-        <ion-button fill="clear" size="small" (click)="navigateTo('/app/aceites')">Ver todo</ion-button>
+<ion-content fullscreen class="app-shell home-page">
+  <section class="hero surface-section" *ngIf="user() as currentUser">
+    <div class="hero-content">
+      <p class="hero-eyebrow">Hola, {{ currentUser.name || currentUser.username }}</p>
+      <h1>{{ greeting() }}</h1>
+      <p class="hero-subtitle">
+        Monetiza tu tiempo con rituales sencillos: explora aceites, guarda favoritos y deja que la IA te guie segun tu
+        estado de animo.
+      </p>
+      <div class="hero-actions">
+        <ion-button color="primary" (click)="openAssistant()">
+          <ion-icon slot="start" name="chatbubble-ellipses-outline"></ion-icon>
+          Abrir asistente
+        </ion-button>
+        <ion-button fill="outline" (click)="navigateTo('/app/aceites')">
+          <ion-icon slot="start" name="leaf-outline"></ion-icon>
+          Ver aceites
+        </ion-button>
       </div>
+      <div class="metrics-grid hero-metrics">
+        <div class="metric-card">
+          <span class="metric-title">Aceites destacados</span>
+          <span class="metric-value">{{ highlightedAceites().length }}</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-title">Atajos disponibles</span>
+          <span class="metric-value">{{ shortcuts.length }}</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-title">Ideas sugeridas</span>
+          <span class="metric-value">{{ quickPrompts.length }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-panel">
+      <div class="hero-panel-card">
+        <h3>Impulsa tu primera sesion de hoy</h3>
+        <p>
+          Responde un prompt rapido y el asistente ajustara recomendaciones con datos reales de tu biblioteca personal.
+        </p>
+        <div class="panel-chips">
+          <ion-chip *ngFor="let prompt of quickPrompts" (click)="openAssistant(prompt.query)">
+            <ion-icon [name]="prompt.icon"></ion-icon>
+            <ion-label>{{ prompt.label }}</ion-label>
+          </ion-chip>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      <ng-container *ngIf="highlightedAceites().length; else emptyAceites">
-        <ion-card *ngFor="let aceite of highlightedAceites()">
+  <section class="surface-section quick-prompts">
+    <div class="section-header">
+      <h3>Preguntas rapidas al asistente</h3>
+      <ion-button fill="clear" size="small" (click)="openAssistant()">Ir al chat</ion-button>
+    </div>
+    <div class="prompt-scroller">
+      <button class="prompt-card" *ngFor="let prompt of quickPrompts" (click)="openAssistant(prompt.query)">
+        <ion-icon [name]="prompt.icon"></ion-icon>
+        <span>{{ prompt.label }}</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="surface-section shortcuts">
+    <div class="section-header">
+      <h3>Atajos rapidos</h3>
+    </div>
+    <div class="shortcut-grid">
+      <button class="shortcut-card" *ngFor="let shortcut of shortcuts" (click)="navigateTo(shortcut.route)">
+        <ion-icon [name]="shortcut.icon"></ion-icon>
+        <div>
+          <strong>{{ shortcut.label }}</strong>
+          <span>Explorar</span>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <section class="surface-section highlighted">
+    <div class="section-header">
+      <h3>Aceites destacados</h3>
+      <ion-button fill="clear" size="small" (click)="navigateTo('/app/aceites')">Ver todo</ion-button>
+    </div>
+
+    <ng-container *ngIf="highlightedAceites().length; else emptyAceites">
+      <div class="highlighted-grid">
+        <ion-card *ngFor="let aceite of highlightedAceites()" class="highlight-card">
           <ion-card-header>
             <ion-card-title>{{ aceite.nombre }}</ion-card-title>
             <ion-card-subtitle>{{ aceite.beneficios }}</ion-card-subtitle>
           </ion-card-header>
           <ion-card-content>
             <p>{{ aceite.descripcion }}</p>
-            <ion-button fill="clear" size="small" (click)="navigateTo('/app/aceites')">
-              Ver mas
-            </ion-button>
+            <div class="card-footer">
+              <ion-button size="small" fill="outline" (click)="navigateTo('/app/aceites')">
+                Ver mas
+              </ion-button>
+            </div>
           </ion-card-content>
         </ion-card>
-      </ng-container>
+      </div>
+    </ng-container>
 
-      <ng-template #emptyAceites>
-        <ion-text color="medium" *ngIf="!isLoadingAceites(); else loadingAceites">
-          No hay aceites registrados en este momento.
-        </ion-text>
-      </ng-template>
-      <ng-template #loadingAceites>
-        <ion-text color="medium">Cargando aceites destacados...</ion-text>
-      </ng-template>
-    </section>
-  </ion-content>
-
+    <ng-template #emptyAceites>
+      <div class="empty-state" *ngIf="!isLoadingAceites(); else loadingAceites">
+        <img src="assets/img/aceite-placeholder.svg" alt="Sin resultados" />
+        <h3>Sin resultados por ahora</h3>
+        <p>Configura nuevos aceites o ajusta filtros para descubrir aromas.</p>
+      </div>
+    </ng-template>
+    <ng-template #loadingAceites>
+      <div class="empty-state">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Cargando aceites destacados...</p>
+      </div>
+    </ng-template>
+  </section>
+</ion-content>

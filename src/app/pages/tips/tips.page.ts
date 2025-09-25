@@ -12,7 +12,7 @@ import {
   IonLabel,
   IonSearchbar,
   IonSpinner,
-  IonText,
+  
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
@@ -42,7 +42,7 @@ addIcons({ 'bulb-outline': bulbOutline });
     IonCardTitle,
     IonCardSubtitle,
     IonCardContent,
-    IonText,
+    
     IonSpinner,
   ],
   templateUrl: './tips.page.html',
