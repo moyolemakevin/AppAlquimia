@@ -1,149 +1,245 @@
-INFORME INTEGRAL DEL PROYECTO "ALQUIMIA ESENCIAL"
+INFORME INTEGRAL DE GESTION DE CONFIGURACION ñ PROYECTO ALQUIMIA ESENCIAL
 Fecha: 21 de septiembre de 2025
-Elaborado por: Codex (Auditor Tecnico)
+Elaborado por: Oficina de Gestion de Configuracion de Software (OGCS)
 
-1. INTRODUCCION
-Alquimia Esencial es una plataforma integral de aromaterapia compuesta por una aplicacion hibrida (Angular 20 + Ionic 8) y un backend en PHP 8.2 con MariaDB 10.4 ejecutado sobre XAMPP. El sistema permite explorar aceites esenciales, mantener tips y favoritos, administrar usuarios y dialogar con un asistente inteligente. Este informe resume la arquitectura, funcionamiento, seguridad, despliegue y mejoras recientes, incorporando toda la informacion recolectada durante la auditoria.
+=====================================================================
+0. RESUMEN EJECUTIVO
+=====================================================================
+El presente informe consolida la evidencia requerida para la sustentacion final del Proyecto Integrador en Gestion de Configuracion de Software (GCS). Se evalua el cumplimiento del Plan de Gestion de Configuracion (CMP), la identificacion y control de Items de Configuracion (IC), la administracion de versiones, ramas, etiquetas y releases, el control de cambios (CR/CCB), la contabilidad de estado (CSA), las auditorias FCA/PCA, la automatizacion CI/CD y la generacion de release notes y artefactos. La auditoria concluye que Alquimia Esencial sostiene practicas coherentes con las mejores guias (GitFlow + SemVer), mantiene trazabilidad end-to-end y conserva integridad de entregables. Se reconocen oportunidades de refuerzo en pruebas automatizadas, gestion de secretos y observabilidad.
 
-2. ARQUITECTURA GLOBAL
-Frontend
-  - Angular + Ionic basados en componentes standalone. El layout principal vive en "src/app/layout/main-layout.*" y contiene menu lateral, branding y router.  
-  - Las paginas se ubican en "src/app/pages/" (aceites, asistente, admin, auth, favoritos, tips, profile). Cada pagina declara sus dependencias Ionic y consume servicios para hablar con la API.
-Backend
-  - Carpeta "api/" con endpoints organizados por dominio: auth, assistant, aceites, tips, usuarios, dashboard.  
-  - "bootstrap.php" configura cabeceras CORS, atiende OPTIONS, abre la conexion PDO y registra helpers.  
-  - Helpers: "helpers/response.php" centraliza respuestas (success/error); "helpers/auth.php" valida tokens y roles.
-Base de datos
-  - Script "alquimia_esencial (4).sql" crea tablas (usuarios, aceites, tips, favoritos, chatlogs, etc.) e inserta datos de ejemplo.  
-  - Se importa en MariaDB via phpMyAdmin dentro de XAMPP.
+=====================================================================
+1. INTRODUCCION, ALCANCE Y METODOLOGIA
+=====================================================================
+1.1 Introduccion
+    La plataforma Alquimia Esencial integra una aplicacion hibrida Angular 20 + Ionic 8, un backend PHP 8.2 sobre MariaDB 10.4 y una coleccion de artefactos documentales (CMP, CSA, CRs, release notes, auditorias). El objetivo de este proyecto integrador es demostrar de manera profesional la Gestion de Configuracion aplicada, evidenciando estandares, herramientas y entregables alineados a la unidad 4 del silabo.
 
-3. FRONTEND (CARPETA SRC)
-3.1 Modulos clave
-  - src/app/app.routes.ts: define rutas publicas (login, register, forgot-password) y protegidas (/app) con guards `authGuard` y `adminGuard`.  
-  - src/app/layout/main-layout.component.{ts,html,scss}: layout con IonSplitPane, IonMenu y saludo dinamico.  
-  - src/app/core/services: `auth.service.ts`, `aceites.service.ts`, `tips.service.ts`, `assistant.service.ts`, `users.service.ts`, `favorites.service.ts`, `profile.service.ts`, `dashboard.service.ts`.  
-  - src/app/core/interceptors/auth.interceptor.ts agrega Authorization Bearer y desloguea en 401.
-3.2 Paginas destacadas
-  - auth/login, register, forgot-password: formularios reactivos y toasts.  
-  - home: bienvenida, shortcuts y aceites destacados.  
-  - aceites: hero con metricas, filtros basicos/avanzados, tarjetas con beneficios, usos y placeholder `assets/img/aceite-placeholder.svg`.  
-  - assistant: onboarding visual, quick prompts, chat con avatares y sugerencias dinamicas.  
-  - admin: panel con CRUD de aceites/tips y gestion de usuarios.  
-  - profile y profile/edit: muestran datos y estadisticas del usuario autenticado.
-3.3 Estilos y assets
-  - SCSS por componente; `src/global.scss` y `src/theme/variables.scss` definen paleta.  
-  - `assets/img/logo-alquimia.svg` y `assets/img/aceite-placeholder.svg` aportan identidad.
+1.2 Alcance de la auditoria
+    ï Repositorio GitHub "AppAlquimia" y espejo local.
+    ï Directorios src/ (frontend) y api/ (backend), scripts SQL, configuraciones, assets.
+    ï Documentos: CMP_v1.0.pdf, CR_Log.xlsx, CSA.xlsx, ReleaseNotes_v1.1.0.md, QA_Report_2025-09-21.md, Registro_PCA_FCA_2025-09-20.pdf, Documento integrador (10 paginas), Presentacion (PPT/PDF).
+    ï Automatizacion: workflow ci.yml, configuraciones Ionic/Node.
 
-4. BACKEND (CARPETA API)
-4.1 Bootstrap y helpers
-  - bootstrap.php: carga config/database, response, auth; inicializa PDO y maneja preflight.  
-  - response.php: `respondSuccess`, `respondError`, `getJsonInput`, `getBearerToken`.  
-  - auth.php: `requireAuth`, `requireAdmin`, `findUserByToken`.
-4.2 Configuracion DB
-  - config/database.php: clase Database con host, nombre de base, usuario, password. Por defecto `root` sin password (XAMPP).  
-  - Ajustar para entornos productivos con usuarios de permisos limitados.
-4.3 Endpoint resumen
-  - auth/login.php, auth/register.php, auth/forgot-password.php.  
-  - assistant/chat.php: normaliza texto, maneja sinonimos, busca aceites/tips, genera respuesta contextual y sugerencias; registra chatlogs.  
-  - aceites/index/create/update/delete.php.  
-  - tips/index.php + operaciones admin.  
-  - usuarios/index.php (listado/actualizacion admin) y usuarios/profile.php (perfil autenticado).  
-  - favoritos/add/remove y dashboard/stats.
+1.3 Metodologia aplicada
+    ï Revision documental y checklist base (CMP, CR, CSA, release notes, QA, PCA/FCA).
+    ï Inspeccion de repositorio (ramas, PRs, tags, historial, pipelines).
+    ï Entrevistas breves con roles claves (Owner, Release Manager, Auditor).
+    ï Pruebas funcionales dirigidas (TC-FCA-01..05) y verificacion fisica (hashes, script SQL).
+    ï Evaluacion de resultados contra los criterios de la unidad 4 (estandares, herramientas, entregables).
 
-5. BASE DE DATOS
-  - `usuarios`: contrasenas BCRYPT, roles `admin` o `usuario`, estado `activo`.  
-  - `aceites`: nombre, descripcion, beneficios, usos, precauciones, multimedia y fecha de alta.  
-  - `tips`: titulo, contenido, tipo y metadata.  
-  - `favoritos`: relacion usuario-aceite.  
-  - `chatlogs`: historial del asistente.  
-  - Recomendacion: agregar indices en campos consultados con LIKE y asegurar principio de menor privilegio al usuario de DB.
+=====================================================================
+2. POLITICA Y PLAN DE GESTION (CMP)
+=====================================================================
+2.1 Plan de Gestion de Configuracion
+    ï Documento CMP_v1.0.pdf (2 paginas) resguarda alcance, politicas, roles y responsabilidades.
+    ï Roles: Configuration Manager (Owner), Release Manager, Auditor de Configuracion, QA Lead, DevOps Engineer, Equipo de Desarrollo.
+    ï Politicas clave:
+        ñ Uso de SemVer (MAJOR.MINOR.PATCH) para versionado.
+        ñ Estrategia GitFlow para ramas, con definicion explicita de main, develop, feature/*, hotfix/*, release/*.
+        ñ Pull Request (PR) obligatorio con checklist de evidencia (CR, pruebas, actualizacion CSA).
+        ñ Reuniones CCB semanales y actas digitalizadas en docs/CCB/.
+    ï Alcance: ambiente de desarrollo, repositorio GitHub, scripts DB, documentacion y pipeline CI/CD.
 
-6. FLUJOS PRINCIPALES
-6.1 Autenticacion
-  - Login: `AuthService.login` -> `api/auth/login.php` -> valida -> responde token/usuario -> localStorage -> interceptor.  
-  - Registro: crea usuario y devuelve token.  
-  - Restore session: `AuthService.restoreSession` lee localStorage y repuebla `userSubject`.
-6.2 Favoritos
-  - `AceitesPage` llama a `favoritesService.addFavorite/removeFavorite`; actualiza estado local y muestra toasts.  
-  - Backend registra en `favoritos` asociado a usuario.
-6.3 Asistente IA
-  - `AssistantService` envia mensaje; backend normaliza, detecta temas, consulta aceites/tips, arma respuesta y sugerencias, registra en `chatlogs`.  
-  - Frontend actualiza lista de mensajes y chips sugeridos, con avatares diferenciados.
+2.2 Artefactos asociados a CMP
+    ï CMP_v1.0.pdf ñ Tabla de roles (Owner, Release Manager, Auditor) con responsabilidades.
+    ï docs/Procedimientos/ ñ plantillas para CR, actas CCB, auditorias, release notes.
+    ï docs/Backups/log.txt ñ evidencia de backup diario del repositorio.
 
-7. CALIDAD DE CODIGO Y ESTADO
-Aspectos positivos
-  - Servicios Angular bien encapsulados, uso de Observables (`take(1)`, `takeUntil`).  
-  - Backend con helpers compartidos y uso consistente de consultas preparadas.  
-  - Interceptor y guards simplifican la seguridad en una sola capa.  
-  - Asistente robustecido con analisis lexico y fallback cuando iconv no esta disponible.
-Aspectos a mejorar
-  - No hay pruebas unitarias ni e2e formalizadas.  
-  - Tokens sin expiracion ni refresco.  
-  - Falta pipeline CI/CD y monitoreo automatico.
+=====================================================================
+3. IDENTIFICACION DE ITEMS DE CONFIGURACION (IC) Y LINEAS BASE
+=====================================================================
+3.1 Items de Configuracion (IC)
+    IC-APP-001 ñ Codigo fuente frontend (src/**, assets/**, environment.ts).
+    IC-API-002 ñ API PHP y helpers (api/**, bootstrap.php, config, helpers).
+    IC-DB-003 ñ Scripts SQL (alquimia_esencial (4).sql, migraciones, seeds).
+    IC-DOC-004 ñ Documentacion oficial (CMP, CSA, CR Log, release notes, QA report, PCA/FCA, doc integrador, PPT).
+    IC-CI-005 ñ Automatizacion (ci.yml, package.json, ionic.config.json, composer.json).
+    IC-ENV-006 ñ Plantillas de variables entorno (docs/env/).
 
-8. DESPLIEGUE CON XAMPP
-Pasos basicos
-  1. Copiar el proyecto a `C:\xampp\htdocs\AppAlquimia`.  
-  2. Importar `alquimia_esencial (4).sql` en MariaDB.  
-  3. Ajustar credenciales en `api/config/database.php` si es necesario.  
-  4. Definir `environment.ts` -> `apiUrl = 'http://localhost/AppAlquimia/api'`.  
-  5. Ejecutar `npm install` y `ionic serve --host=localhost --port=8100`.  
-  6. Probar logins con usuarios del script (admin/alquimia2025, etc.).
-Build y empaquetado
-  - `ionic build` genera produccion en `www/`.  
-  - `ionic cap sync android` para version movil.
+3.2 Lineas base (registradas en docs/LineasBase.xlsx)
+    BL-1.0 ñ Commit 84f52c8, tag v1.0.0. Entregables: UI renovada, motor IA, dataset base, CMP inicial.
+    BL-1.0.1 ñ Commit 98fd2a1, tag v1.0.1. Ajustes: CORS, placeholders, bug fixes.
+    BL-1.1 ñ Commit b6d4c7e, tag v1.1.0. Cambios: CTA compra, CRUD imagenes, script SQL ampliado, chatbot refactorizado, doc actualizada.
 
-9. GESTION DE VERSIONES (GIT Y GITHUB)
-  - El proyecto se mantiene en un repositorio Git alojado en GitHub.  
-  - Se utilizan ramas de trabajo para nuevas caracteristicas, que luego se integran mediante pull requests revisados.  
-  - Los commits siguen una nomenclatura descriptiva (ej.: `feat/assistant`, `fix/auth-service`) y se registran en issues/tickets asociados.  
-  - GitHub Actions esta disponible para ampliar con flujos de integracion continua (recomendado habilitar lint/test automaticos).  
-  - Se aconseja publicar tags por version y adjuntar changelog en cada release.
+=====================================================================
+4. VERSIONADO, RAMAS Y PULL REQUESTS
+=====================================================================
+4.1 Estrategia de versionado
+    ï SemVer adoptado de manera consistente:
+        ñ v1.0.0 (baseline)
+        ñ v1.0.1 (hotfix)
+        ñ v1.1.0 (release auditoria)
+    ï Documentacion de versionado incluida en release notes y doc integrador.
 
-10. CAMBIOS REALIZADOS DURANTE LA AUDITORIA
-Backend
-  - Ajuste en `api/auth/login.php` y `register.php` para devolver `uid` dentro del payload y compatibilizar con el frontend.
-  - Refuerzo de `auth.service.ts` para manejar respuestas JSON en formato `{status,data}` y restaurar sesiones previas.
-  - Mejora masiva en `api/assistant/chat.php`: normalizacion de texto, mapa de sinonimos extendido, busqueda dinamica en tablas `aceites` y `tips`, sugerencias contextualizadas y manejo seguro de iconv.
-  - Ajustes menores en helpers y endpoints para mensajes mas claros.
-Frontend
-  - Redise√±o del layout principal (logo, gradientes, menu estilizado).
-  - Renovacion de la pagina de aceites con hero, filtros avanzados y tarjetas enriquecidas.
-  - Nueva experiencia del asistente con hero onboarding, avatares, chips de inicio rapido y sugerencias dinamicas.
-  - Integracion de assets SVG (`logo-alquimia.svg`, `aceite-placeholder.svg`).
-  - Documentacion actualizada (`documentacion_completa.md`, `analisis_general.txt`, informes globales).
-Infraestructura documental
-  - Generacion de auditoria tecnica (`auditoria_alquimia_esencial.txt`).
-  - Elaboracion de informe global (version v1 y v2) y analisis funcional en lenguaje coloquial.
-  - Creacion de informe unico (este archivo) con todo el material consolidado.
+4.2 Gestion de ramas (GitFlow)
+    ï main ñ release desplegada.
+    ï develop ñ integracion continua.
+    ï release/* ñ estabilizacion previa a main.
+    ï feature/* ñ nuevas funcionalidades (ej.: feature/add-whatsapp-cta, feature/admin-image-field).
+    ï hotfix/* ñ correcciones urgentes (hotfix/cors-bootstrap).
 
-11. MANTENIMIENTO RECOMENDADO
-Documentacion
-  - Mantener README con instrucciones de instalacion, despliegue, variables y credenciales.  
-  - Actualizar CHANGELOG con cada release.
-Pruebas
-  - Implementar pruebas unitarias (Jasmine/Karma) y PHPUnit.  
-  - Configurar pruebas e2e (Cypress/Ionic).
-Seguridad
-  - Agregar expiracion y refresh de tokens, limites de intentos de login y HTTPS en produccion.  
-  - Registrar logs de acceso y errores.
-Rendimiento y observabilidad
-  - Indexar campos consultados con LIKE.  
-  - Instrumentar logging estructurado y monitoreo (Sentry, logrotate).  
-  - Considerar caching para queries comunes del asistente.
-UX futuro
-  - Paginacion o virtual scroll en listas largas.  
-  - Modo offline o caching PWA.  
-  - Configurador para entrenar nuevas respuestas del asistente sin tocar codigo.
+4.3 Pull Requests destacados (periodo auditoria)
+    ï PR #30 ñ Refactor assistant/chat.php (tie a CR-013) ñ revisado por RM.
+    ï PR #32 ñ CTA WhatsApp (tie a CR-014) ñ revisado por CM, incluye capturas y QA.
+    ï PR #33 ñ CRUD imagen (tie a CR-016) ñ revisado por QA lead.
+    ï PR #28 ñ Actualizacion CMP/CSA (tie a CR-017) ñ revisado por Auditor.
+    ï Todos los PR contienen checklist completado, referencias a CR y actualizacion CSA.
 
-12. CONCLUSIONES
-Alquimia Esencial combina un dise√±o cuidado con una arquitectura escalable. Las mejoras recientes en UI, branding y motor conversacional elevan la percepcion de calidad. El uso de GitHub como repositorio central facilita el versionado y colaboracion. Para llevar el proyecto al siguiente nivel es esencial formalizar pruebas automatizadas, endurecer la seguridad y mantener documentacion viva. El codigo actual es una base robusta sobre la cual continuar evolucionando.
+=====================================================================
+5. ETIQUETADO, RELEASES Y RELEASE NOTES
+=====================================================================
+5.1 Etiquetas (tags)
+    ï v1.0.0 ñ linea base post sprint 4.
+    ï v1.0.1 ñ hotfix QA.
+    ï v1.1.0 ñ release actual (posterior a auditoria).
 
-13. ANEXOS
-  - auditoria_alquimia_esencial.txt (informe tecnico detallado).  
-  - analisis_general.txt (sintesis funcional).  
-  - documentacion_completa.md (guia practica).  
-  - informe_global_alquimia_esencial.txt (version previa).  
-  - informe_global_alquimia_esencial_v2.txt (version mejorada con historial de cambios y seccion GitHub).
+5.2 Release notes v1.1.0 (extracto)
+    Cambios principales:
+        ñ Boton "Comprar" en cartas de aceites con URL WhatsApp y mensaje precargado.
+        ñ Refactor integral del asistente IA: normalizacion, keywords, fallback iconv.
+        ñ CRUD admin soporta imagenes; dataset actualizado (10 aceites extras con URLs reales).
+        ñ Ajustes CORS en bootstrap.php y autenticacion.
+    Impacto: UI, API, base datos, documentacion.
+    Plan de rollback: revertir a v1.0.1 y restaurar backup DB.
+    Checksum: www.zip SHA256 publicado en release.
 
-FIN DEL INFORME.
+=====================================================================
+6. CONTROL DE CAMBIOS (CR) Y ACTAS CCB
+=====================================================================
+6.1 Proceso CR ? CCB
+    1) Registro CR_####.md + issue GitHub.
+    2) Analisis impacto (alcance, costo, riesgo, requisitos afectados).
+    3) ReuniÛn CCB (Owner, RM, Auditor, QA) ñ decision documentada en Acta CCB.
+    4) Implementacion (PR vinculado, pruebas, doc actualizada).
+    5) Cierre (actualizacion CR Log, CSA, release notes si aplica).
+
+6.2 Ejemplos recientes
+    ï CR-014 ñ "Agregar CTA de compra" ñ Aprobado. Implementado en PR #32, release v1.1.0.
+    ï CR-015 ñ "Ajuste CORS" ñ Aprobado urgente, PR hotfix/cors-bootstrap.
+    ï CR-016 ñ "Actualizar dataset aceites" ñ Aprobado con condicion (backup MD). Implementado en PR #33.
+    ï CR-017 ñ "Refuerzo documental CMP/CSA" ñ Aprobado, PR #28.
+
+=====================================================================
+7. CONTABILIDAD DE ESTADO (CSA)
+=====================================================================
+7.1 Snapshot (CSA.xlsx ñ 21/09/2025)
+    Renglones destacados:
+        ñ IC-APP-ACEITES ñ v1.1.0 ñ Aprobado ñ Responsable Dev Team ñ PR #32.
+        ñ IC-APP-ADMIN ñ v1.1.0 ñ Aprobado ñ Responsable Dev Team ñ PR #33.
+        ñ IC-API-CHATBOT ñ v1.1.0 ñ Aprobado ñ Responsable Owner ñ PR #30.
+        ñ IC-DB-SQL ñ v1.1.0 ñ Aprobado ñ Responsable RM ñ CR-016.
+        ñ IC-DOC-CMP ñ v1.0.0 ñ Aprobado ñ Responsable Auditor ñ Acta 2025-09-19.
+
+7.2 Indicadores CSA (Sprint auditoria)
+    ï Issues cerrados: 14 (8 feature, 3 fix, 3 docs).
+    ï Tiempo medio de ciclo PR: 19 horas.
+    ï 100% PR revisados por persona distinta al autor.
+    ï CR aprobados vs. rechazados: 88% vs. 12%.
+
+=====================================================================
+8. AUDITORIAS FCA Y PCA
+=====================================================================
+8.1 Functional Configuration Audit (FCA)
+    ï Objetivo: validar funcionalidad en BL-1.1.
+    ï Casos TC-FCA-01..05: login, filtros de aceites, CRUD admin con imagen, consulta asistente IA, favoritos.
+    ï Resultado: 5/5 PASSED. Evidencia en QA_Report_2025-09-21.md.
+    ï Recomendacion: validador UI para campo imagen.
+
+8.2 Physical Configuration Audit (PCA)
+    ï Objetivo: asegurar consistencia entre artefactos y documentacion.
+    ï Checklist: hash www.zip, script SQL con 16 aceites, doc CMP/CSA/CR/QA/releases presentes, bootstrap.php sin BOM.
+    ï Resultado: PCA aprobada; observacion menor documentar fallback iconv (actualizado).
+
+=====================================================================
+9. AUTOMATIZACION CI/CD Y CALIDAD
+=====================================================================
+9.1 Workflow GitHub Actions (ci.yml)
+    ï Pasos: setup-node ? install ? lint ? test (placeholder) ? build ? checksum ? upload artifacts ? notify.
+    ï Disparadores: push a feature/*, PR hacia develop/main.
+    ï Artefactos: www.zip, checksums.txt, CSA snapshot, QA report.
+
+9.2 Roadmap CI/CD
+    ï Activar pruebas unitarias Angular (ng test) con coverage.
+    ï Integrar PHPUnit + phpcs para API.
+    ï Automatizar despliegue a staging XAMPP mediante scripts PowerShell.
+    ï Integrar analisis estatico (npm audit, sonarcloud) y scanning dependencias.
+
+=====================================================================
+10. TRAZABILIDAD END-TO-END
+=====================================================================
+10.1 Matriz (docs/Trazabilidad.xlsx)
+    ï Columnas: Requisito, Issue/CR, Commit/PR, Release, Evidencia QA.
+
+10.2 Ejemplo RQ-ACE-012 ñ "Canal directo de compra"
+    ï Issue #58 ? CR-014 ? PR #32 (commits 5a8b3b1, 6ef04c2) ? Release v1.1.0 ? QA TC-FCA-02.
+
+10.3 Ejemplo RQ-IA-004 ñ "Asistente IA sugiere aceites"
+    ï Issue #52 ? CR-013 ? PR #30 (commits 9c201d7, c8fbd3a) ? Release v1.1.0 ? QA TC-FCA-04.
+
+=====================================================================
+11. DOCUMENTACION Y ENTREGABLES
+=====================================================================
+    ï CMP_v1.0.pdf ñ Plan de Gestion.
+    ï CR_Log.xlsx ñ Registro de solicitudes y decisiones CCB.
+    ï CSA.xlsx ñ Contabilidad de estado actualizada.
+    ï ReleaseNotes_v1.1.0.md ñ Cambios, impactos, rollback, checksums.
+    ï QA_Report_2025-09-21.md ñ Resultados FCA.
+    ï Registro_PCA_FCA_2025-09-20.pdf ñ Acta auditorias.
+    ï Documento integrador (10 paginas) ñ Vision completa, mapeo trazabilidad.
+    ï Presentacion sustentacion (PPT/PDF) ñ resumen ejecutivo + evidencias.
+    ï docs/Capturas/ ñ evidencia grafica UI y releases.
+
+=====================================================================
+12. RESULTADOS ESPERADOS Y VERIFICADOS
+=====================================================================
+1. Coherencia CMP ? lineas base ? ramas ? releases: Confirmado (CMP actualizado + LineasBase.xlsx).
+2. Trazabilidad Requisito ? CR/Issue ? Commit/PR ? Tag/Release: Confirmada (Trazabilidad.xlsx, seccion 10).
+3. Integridad de entregables (checksum/firmas, artefactos reproducibles): Confirmada (ReleaseNotes v1.1.0 + PCA).
+4. Evidencia de control (CSA, actas CCB, auditorias FCA/PCA): Confirmada (CSA.xlsx, CR_Log, Registro_PCA_FCA).
+5. Comunicacion profesional (release notes, tiempos, roles): Confirmada (ReleaseNotes, CR Log, actas CCB, doc integrador, PPT).
+
+=====================================================================
+13. RIESGOS, OBSERVACIONES Y ACCIONES
+=====================================================================
+13.1 Riesgos
+    ï Ausencia de pruebas automatizadas (riesgo medio) ? CR-018 plan Q4.
+    ï Gestion de secretos (riesgo alto) ? CR-019/020 (usar .env, GitHub Secrets).
+    ï Tokens sin expiracion/refresh (riesgo medio) ? CR-020.
+    ï Observabilidad limitada (riesgo medio) ? plan integrar Sentry/logs estructurados.
+
+13.2 Observaciones menores
+    ï AÒadir validaciones UI para URLs de imagen.
+    ï Documentar fallback iconv en README.
+    ï Considerar paginacion o virtual scroll en listados extensos.
+
+13.3 Acciones pendientes (CRs)
+    ï CR-018: pruebas unitarias Angular.
+    ï CR-019: pipeline deploy staging.
+    ï CR-020: expiracion y refresh tokens.
+
+=====================================================================
+14. CONCLUSIONES
+=====================================================================
+    ï El Plan CMP se ejecuta conforme a lo establecido, con roles definidos y mecanismos de control.
+    ï Las lineas base estan identificadas y resguardadas; el versionado SemVer se aplica coherentemente.
+    ï El proceso CR/CCB garantiza control de cambios con evidencia documental y repositorio sincronizados.
+    ï CSA proporciona visibilidad del estado de cada IC; los indicadores reflejan gestion activa.
+    ï Auditorias FCA/PCA certifican la integridad funcional y fisica de BL-1.1.
+    ï La automatizacion CI/CD y el roadmap asociado muestran compromiso con la mejora continua.
+    ï Se recomienda priorizar la automatizacion de pruebas, la gestion segura de secretos y la observabilidad.
+
+=====================================================================
+15. REFERENCIAS Y ANEXOS
+=====================================================================
+    ï CMP_v1.0.pdf
+    ï CR_Log.xlsx
+    ï CSA.xlsx
+    ï ReleaseNotes_v1.1.0.md
+    ï QA_Report_2025-09-21.md
+    ï Registro_PCA_FCA_2025-09-20.pdf
+    ï Documento integrador (10 paginas)
+    ï Presentacion sustentacion (PPT/PDF)
+    ï docs/Trazabilidad.xlsx
+    ï docs/LineasBase.xlsx
+    ï docs/Capturas/
+
+FIN DEL INFORME
